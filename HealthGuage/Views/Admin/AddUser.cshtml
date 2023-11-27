@@ -1,0 +1,116 @@
+﻿@{
+    ViewBag.Title = "Add User";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="p-20">
+
+    <div class="row">
+        <form action="@Url.Action("PostAddUser", "Admin")" method="post" id="postAddUser">
+
+            <div class="row">
+                <div class="col-md-8 col-md-offset-2">
+                    <div class="panel panel-flat">
+                        <div class="panel-heading">
+                            <h2 class="panel-title text-center text-bold">New User</h2>
+                        </div>
+
+                        <div class="panel-body">
+                            <legend class="text-bold text-uppercase"><span class="text-danger">*</span> Fields are mandatory to fill</legend>
+
+
+                            <div class="form-group">
+                                <label class="text-bold">Name <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="Name" required name="Name" placeholder="Enter Full Name Here">
+                            </div>
+
+
+                            <div class="form-group">
+                                <label class="text-bold">Email <span class="text-danger">*</span></label>
+                                <input type="email" name="Email" id="Email" class="form-control" onkeyup="validateEmail(this.value)" placeholder="Add Email Here" required>
+                                <span class="text-danger" id="emailErrMsg"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="text-bold">Contact</label>
+                                <input type="text" class="form-control" name="PhoneNumber" placeholder="Enter User Contact Number">
+                            </div>
+
+
+
+                            <div class="form-group">
+                                <label class="text-bold ">Password: <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <input type="password" class="form-control" autocomplete="new-password" placeholder="Your Password" required name="Password" id="password">
+                                    <span class="input-group-btn" style="padding-left:0px;">
+                                        <button class="btn btn-default" onclick="ShowPasswords(1)" type="button" style="display:block" id="SignupShowPassword">Show</button>
+                                        <button class="btn btn-default" onclick="ShowPasswords(1)" type="button" style="display:none" id="SignupHidePassword">Hide</button>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <a href="@Url.Action("ViewUser","Admin")" class="btn btn-primary"><i class="fa-solid fa fa-arrow-left position-left"></i> Back To List</a>
+                                </div>
+                                <div class="col-md-6">
+                                    <button type="submit" id="subBtn" class="btn btn-primary pull-right">Add <i class="icon-database-insert position-right"></i></button>
+                                </div>
+                            </div>
+                            
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+</div>
+
+<script>
+
+    function validateEmail(email) {
+        if (email != "") {
+            $.ajax({
+                type: 'POST',
+                url: "../Ajax/ValidateEmail",
+                dataType: "json",
+                data: {
+                    email: email, id: -1
+                },
+                success: function (response) {
+                    if (response == true) {
+                        $('#emailErrMsg').text("");
+                        $('#subBtn').attr('disabled', false);
+                    }
+                    else {
+                        $('#emailErrMsg').text("Duplicate Email");
+                        $('#subBtn').attr('disabled', true);
+                    }
+                },
+                error: function () {
+                    $('#emailErrMsg').text("");
+                    $('#subBtn').attr('disabled', false);
+                    alert("Ajax failed");
+                }
+            });
+        }
+
+    }
+
+    function formSubmit(){
+        var Name = $("#Name").val();
+        var Email = $("#Email").val();
+        var Password = $("#Password").val();
+        if (Name == "" || Name == undefined || Name == null) { }
+        $("#subBtn").attr("disabled", true);
+        $("#postAddUser").submit();
+    }
+</script>
+
+<script>
+    //Used to handle Sidebar links Activeness
+    $('#manageUserTab1').addClass('active');
+
+</script>

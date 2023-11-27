@@ -1,0 +1,320 @@
+﻿@{
+    ViewBag.Title = "View Product";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .table > tbody > tr > td {
+        padding: 5px !important;
+    }
+</style>
+
+
+<div class="modal fade" id="addModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="text-center text-bold">Add Product</h5>
+                <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <form action="@Url.Action("PostAddProduct","Product")" method="post" id="postAddIngre">
+                    <div class="form-group">
+                        <label class="text-bold">Name <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" onkeyup="validateName(this.value)" name="Name" placeholder="Please Enter Full Name" required>
+                    </div>
+                    <span class="text-danger" id="addNameProduct"></span>
+                    <div class="modal-footer">
+                        <button type="submit" value="submit" class="btn btn-primary" id="addSubBtn">Add</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="updateModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="text-center text-bold">Update Product</h5>
+                <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <form action="@Url.Action("PostUpdateProduct","Product")" method="post" id="postupdIngre">
+                    <input type="hidden" name="Id" id="updId" />
+
+                    <div class="form-group">
+                        <label class="text-bold">Name <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" name="Name" id="updName" onkeyup="validateName(this.value)" placeholder="Please Enter Full Name" required>
+                    </div>
+
+                    <span class="text-danger" id="updNameProduct"></span>
+                    <div class="modal-footer">
+                        <button type="submit" value="submit" class="btn btn-primary" id="updSubBtn">Update</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="panel p-20 m-10">
+
+    <div class="row">
+        <center><u><h3>Products List</h3></u></center>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8"></div>
+        <div class="col-md-2 pull-right btn-block">
+            <a onclick="AddNewProduct()" class="btn btn-primary m-5 pull-right">Add New</a>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table text-md-nowrap table-striped table-bordered text-center no-footer" id="ProductTable">
+            <thead class="bg-indigo-800">
+                <tr>
+                    <th class="text-bold" hidden>...</th>
+                    <th class="text-bold text-center">
+                        Name
+                    </th>
+                    <th class="text-bold text-center">
+                        Action
+                    </th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+
+
+<script>
+
+    function AddNewProduct() {
+        $("#addModal").modal('show');
+    }
+
+    function formSubmit(id) {
+        if (id == 1) {
+            $("#addSubBtn").attr('disabled', true);
+            $("#postAddIngre").submit();
+        }
+        else {
+            $("#updSubBtn").attr('disabled', true);
+            $("#postupdIngre").submit();
+        }
+    }
+
+    var way = $('#way').val();
+
+    loadTable();
+
+    function loadTable(Name) {
+        $('#ProductTable').DataTable(
+            {
+                "ajax":
+                {
+                    "url": '@Url.Action("GetProductDataTableList", "Product")',
+                    "type": "POST",
+                    "datatype": "json",
+                    "data": { Name: Name }
+                },
+                'columns':
+                    [
+                        { "data": "hidden", "name": "0" },
+                        { "data": "Name", "name": "Name" },
+                    ],
+                'columnDefs':
+                    [
+                        {
+                            "targets": 0,
+                            "visible": false,
+                            "searchable": false,
+                            "render": function (data, type, full, meta) {
+                                return null;
+                            }
+                        },
+                        {
+                            "targets": 1,
+                            'className': '',
+                            "render": function (data, type, full, meta) {
+                                return full.name;
+                            }
+                        },
+                        {
+                            "targets": 2,
+                            'className': '',
+                            'sortable': false,
+                            "render": function (data, type, full, meta) {
+                                return '<ul class="icons-list"> ' +
+                                    '<li class="dropdown" >' +
+                                    '			<a href="#" class="dropdown-toggle" data-toggle="dropdown">' +
+                                    '				<i class="icon-menu9"></i>' +
+                                    '			</a>' +
+                                    '			<ul class="dropdown-menu dropdown-menu-right"  style="padding-left:5px !important; min-width:95px !important;">' +
+                                    '				<li>' +
+                                    '                   <button class="btn btn-sm bg-info icon-pencil" onclick="updateFunction(\'' + full.encId + '\')" title="Edit"></button>' +
+                                    '                   <button class="btn btn-sm bg-danger icon-bin" onclick="deleteFunction(\'' + full.encId + '\')" title="Delete"></button>' +
+                                    '               </li>' +
+                                    '			</ul>' +
+                                    '		</li >' +
+                                    '	</ul >';
+                            }
+                        },
+                    ],
+                "serverSide": "true",
+                "processing": "true",
+                "language":
+                {
+                    "processing": "<i class='icon-spinner spinner icon-2x'></i>",
+                    "search": "<span>Search :</span> _INPUT_",
+                    "searchPlaceholder": "Filter Data",
+                    "lengthMenu": "<span>Show :</span> _MENU_",
+                    "paginate": { 'first': 'First', 'last': 'Last', 'next': '&rarr;', 'previous': '&larr;' }
+                }
+            });
+    }
+
+    function searchTable() {
+        var name = $('#searchName').val();
+
+        $('#ProductTable').DataTable().clear();
+        $('#ProductTable').DataTable().destroy();
+
+        loadTable(name);
+    }
+
+    function clearSearch() {
+        $('#ProductTable').DataTable().clear();
+        $('#ProductTable').DataTable().destroy();
+
+        $('#searchName').val("");
+
+        loadTable();
+    }
+
+    function updateFunction(id) {
+        $('#updNameProduct').text("");
+        $('#updSubBtn').attr('disabled', false);
+        $("#loadImg").show();
+
+        $.ajax({
+            type: 'POST',
+            url: "../Product/GetProductById",
+            dataType: "json",
+            data: {
+                id: id
+            },
+            success: function (response) {
+                if (response == 0) {
+                    alert("Record not found, Please reload the page.");
+                }
+                $("#updId").val(response.id);
+                $("#updName").val(response.name);
+                $("#loadImg").hide();
+                $("#updateModal").modal('show');
+            },
+            error: function () {
+                $("#loadImg").hide();
+            }
+        });
+
+    }
+
+    function validateName(value) {
+        var id = $('#updId').val();
+        if (value != "" || id != "") {
+            $.ajax({
+                type: 'POST',
+                url: "../Product/ValidateName",
+                dataType: "json",
+                data: {
+                    name: value, id: id
+                },
+                success: function (response) {
+                    if (response == true) {
+                        $('#addNameProduct').text("");
+                        $('#updNameProduct').text("");
+                        $('#addSubBtn').attr('disabled', false);
+                        $('#updSubBtn').attr('disabled', false);
+                    }
+                    else if (response == false) {
+                        $('#addNameProduct').text("Name already exist");
+                        $('#updNameProduct').text("Name already exist");
+                        $('#addSubBtn').attr('disabled', true);
+                        $('#updSubBtn').attr('disabled', true);
+                    }
+                    else {
+                        $('#addNameProduct').text(response);
+                        $('#updNameProduct').text(response);
+                    }
+                },
+                error: function () {
+                    $('#addNameProduct').text("");
+                    $('#updNameProduct').text("");
+                    $('#addSubBtn').attr('disabled', false);
+                    $('#updSubBtn').attr('disabled', false);
+
+                    alert("Ajax failed");
+                }
+            });
+        }
+
+    }
+
+    function deleteFunction(id) {
+        $('#confirmModalHeading').text('Warning!');
+        $('#confirmModalHeader').removeClass('bg-success');
+        $('#confirmModalHeader').addClass('bg-danger');
+        $('#confirmModalText').empty();
+        $('#confirmModalText').append('Do you really want to delete this Product?<br />' +
+            'This record is going to permanently delete from our system.<br />' +
+            'The action cannot be undone.');
+
+        $("#confirmModalForm").attr("action", "../Product/DeleteProduct?id=" + id);
+
+        $('#confirmModal').modal('show');
+    }
+
+</script>
+
+<script>
+    $("#toggle").change(function () {
+
+        // Check the checkbox state
+        if ($(this).is(':checked')) {
+            // Changing type attribute
+            $("#updPassword").attr("type", "text");
+
+            // Change the Text
+            $("#toggleText").text("Hide");
+        } else {
+            // Changing type attribute
+            $("#updPassword").attr("type", "password");
+
+            // Change the Text
+            $("#toggleText").text("Show");
+        }
+
+    });
+
+
+</script>
+
+<script>
+    $('#manageProductTabView').addClass('active');
+</script>
+

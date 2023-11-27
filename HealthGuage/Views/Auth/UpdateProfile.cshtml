@@ -1,0 +1,120 @@
+﻿
+@{
+    ViewBag.Title = "Update Profile";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="content bg-white m-10">
+    <br />
+    <br />
+
+    <div class="row" style="height:700px;">
+        <form action="@Url.Action("PostUpdateProfile", "Auth")" method="post" enctype="multipart/form-data">
+            <div class="row">
+                <div class="col-md-10 col-md-offset-1">
+
+                    <div class="panel panel-flat">
+                        <div class="panel-heading">
+                            <h3 class="text-bold text-center"><u>Update Profile</u></h3>
+
+                        </div>
+
+                        <div class="panel-body">
+
+
+                            <input type="hidden" class="form-control" required name="Id" placeholder="" value="@ViewBag.User.Id">
+                            <div class="form-group">
+                                <label class="text-bold">Name <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" required name="Name" placeholder="Please Enter your Full Name Here" value="@ViewBag.User.Name">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="text-bold">Email <span class="text-danger">*</span></label>
+                                <input type="email" onkeyup="validateEmail(this.value)" class="form-control" required name="Email" placeholder="Please Enter your Email" value="@ViewBag.User.Email">
+                                <span class="text-danger" id="updErrMsg"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="text-bold">Contact</label>
+                                <input type="text" class="form-control" name="PhoneNumber" placeholder="Please Enter your Contact Number" value="@ViewBag.User.PhoneNumber">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="text-bold">Profile Image</label>
+                                <input type="file" accept="image/png,image/jpg, image/jpeg" 
+                                       class="form-control"
+                                       id="profileImage"
+                                       name="File"
+                                       onchange="loadfile(event)"
+                                />
+                                <p class="mb-0">Allowed JPG, JPEG or PNG. Max size of 1MB</p>
+                            </div>
+
+
+
+                            <div class="text-right">
+                                <button type="submit" id="updSubBtn" class="btn btn-primary">Update <i class="icon-database-insert position-right"></i></button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+</div>
+
+<script>
+
+    function validateEmail(email) {
+        var id = '@ViewBag.User.Id';
+
+
+        if (email != "") {
+            $.ajax({
+                type: 'POST',
+                url: "../Ajax/ValidateEmail",
+                dataType: "json",
+                data:
+                {
+                    email: email, id: id
+                },
+                success: function (response)
+                {
+                    if (response == true)
+                    {
+                        $('#updErrMsg').text("");
+                        $('#updSubBtn').prop('disabled', false);
+                    }
+                    else {
+                        $('#updErrMsg').text("Duplicate Email");
+                        $('#updSubBtn').prop('disabled', true);
+                    }
+                },
+                error: function ()
+                {
+                    $('#updErrMsg').text("");
+                    $('#updSubBtn').prop('disabled', false);
+                    alert("Email Validation Ajax Failed");
+                }
+            });
+        }
+
+    }
+
+    function loadfile(event) 
+    {
+        var size = event.target.files[0].size / 1024 / 1024;
+        size = size.toFixed(2);
+        if (size > 1.01) 
+        {
+            //$("#profileImage").val("");
+            document.getElementById('profileImage').value = "";
+            alert("Image size exceeds from 1MB");
+            return;
+        }
+    }
+
+</script>
+
