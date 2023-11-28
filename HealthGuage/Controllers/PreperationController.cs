@@ -3,6 +3,7 @@ using HealthGuage.Models;
 using HealthGuage.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Template.HelpingClasses;
+using Template.Models;
 using Template.Repositories;
 
 namespace Template.Controllers
@@ -170,6 +171,38 @@ namespace Template.Controllers
             };
 
             return Json(obj);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> GetPreperationList()
+        {
+            var getUserId = gp.GetUserClaims();
+
+            var list = new List<Preperation>();
+            if (getUserId.Role == 1)
+            {
+                list = (List<Preperation>)await _preperationRepo.GetActivePreperationList();
+            }
+            else
+            {
+                list = (List<Preperation>)await _preperationRepo.GetActivePreperationList(Convert.ToInt32(getUserId.Id));
+            }
+
+            List<PreperationDto> udto = new List<PreperationDto>();
+
+            foreach (Preperation u in list)
+            {
+                PreperationDto obj = new PreperationDto()
+                {
+                    Id = u.Id.ToString(),
+                    EncId = StringCipher.EncryptId(u.Id),
+                    Name = u.Name,
+                };
+
+                udto.Add(obj);
+            }
+
+            return Json(udto);
         }
 
         public async Task<IActionResult> DeletePreperation(string id)

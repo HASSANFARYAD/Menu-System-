@@ -11,6 +11,7 @@ namespace Template.Repositories
         Task<int> GetActiveMenuCount(int id = -1);
         Task<IEnumerable<Menu>> GetActiveMenuList(int id = -1);
         Task<bool> AddMenu(Menu Menu);
+        Task<bool> AddMenuWithoutSaving(Menu Menu);
         Task<bool> UpdateMenu(Menu Menu);
         Task<bool> DeleteMenu(int id);
         Task<bool> ValidateName(string name, int id = -1);
@@ -46,7 +47,7 @@ namespace Template.Repositories
 
         public async Task<IEnumerable<Menu>> GetActiveMenuList(int id = -1)
         {
-            if (id != -1)
+            if (id == -1)
             {
                 var Menu = await context.Menu.Where(x => x.IsActive == 1).OrderByDescending(x => x.Id).ToListAsync();
                 return Menu;
@@ -65,6 +66,20 @@ namespace Template.Repositories
             {
                 context.Menu.Add(Menu);
                 await context.SaveChangesAsync();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+
+        public async Task<bool> AddMenuWithoutSaving(Menu Menu)
+        {
+            try
+            {
+                context.Menu.Add(Menu);
                 return true;
             }
             catch

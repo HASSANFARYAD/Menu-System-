@@ -169,6 +169,38 @@ namespace Template.Controllers
 			return Json(obj);
 		}
 
+        [HttpPost]
+        public async Task<IActionResult> GetIngredientList()
+        {
+			var getUserId = gp.GetUserClaims();
+
+            var list = new List<Ingredient>();
+            if (getUserId.Role == 1)
+            {
+                list = (List<Ingredient>)await _ingredientRepo.GetActiveIngredientList();
+            }
+            else
+            {
+                list = (List<Ingredient>)await _ingredientRepo.GetActiveIngredientList(Convert.ToInt32(getUserId.Id));
+            }
+
+            List<IngredientDto> udto = new List<IngredientDto>();
+
+            foreach (Ingredient u in list)
+            {
+                IngredientDto obj = new IngredientDto()
+                {
+                    Id = u.Id.ToString(),
+                    EncId = StringCipher.EncryptId(u.Id),
+                    Name = u.Name,
+                };
+
+                udto.Add(obj);
+            }
+
+            return Json(udto);
+        }
+
         public async Task<IActionResult> DeleteIngredient(string id)
         {
             int Id = StringCipher.DecryptId(id);

@@ -174,6 +174,38 @@ namespace Template.Controllers
             return Json(obj);
         }
 
+        [HttpPost]
+        public async Task<IActionResult> GetProductList()
+        {
+            var getUserId = gp.GetUserClaims();
+
+            var list = new List<Product>();
+            if (getUserId.Role == 1)
+            {
+                list = (List<Product>)await _productRepo.GetActiveProductList();
+            }
+            else
+            {
+                list = (List<Product>)await _productRepo.GetActiveProductList(Convert.ToInt32(getUserId.Id));
+            }
+
+            List<ProductDto> udto = new List<ProductDto>();
+
+            foreach (Product u in list)
+            {
+                ProductDto obj = new ProductDto()
+                {
+                    Id = u.Id.ToString(),
+                    EncId = StringCipher.EncryptId(u.Id),
+                    Name = u.Name,
+                };
+
+                udto.Add(obj);
+            }
+
+            return Json(udto);
+        }
+
         public async Task<IActionResult> DeleteProduct(string id)
         {
             int Id = StringCipher.DecryptId(id);

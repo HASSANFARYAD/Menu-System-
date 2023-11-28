@@ -3,10 +3,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 using System.Security.Claims;
 using Template.HelpingClasses;
-using SixLabors.ImageSharp.Formats.Jpeg;
-using Color = SixLabors.ImageSharp.Color;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
+using DocumentFormat.OpenXml.Wordprocessing;
 
 
 namespace HealthGuage.HelpingClasses
@@ -82,113 +79,37 @@ namespace HealthGuage.HelpingClasses
             return DateTime.Now;
         }
 
-        public static async Task<string> UploadProfilePicture(IFormFile file, string oldProfile = "", string way = "")
+        public static async Task<string> UploadProfilePicture(IFormFile file, string oldProfile = "",
+            string folderName = "", string userId = "")
         {
             try
             {
-                // Define the root folder where you want to save the file
-                string rootFolder = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot\UserProfile\");
-                string fileFirstName = "ProfileImage";
-                if (!string.IsNullOrEmpty(way))
+                CreateUserDirectory(userId);
+                var fileDir = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/users/user" + userId);
+                if (!string.IsNullOrEmpty(folderName))
                 {
-                    rootFolder = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot\UserTile\");
-                    fileFirstName = "TileImage";
-                }
-
-                if (!Directory.Exists(rootFolder))
-                {
-                    Directory.CreateDirectory(rootFolder);
+                    fileDir = Path.Combine(fileDir, folderName);
                 }
 
                 // Generate a unique filename for the uploaded file
-                string fileName = fileFirstName + DateTime.Now.Ticks + Path.GetExtension(file.FileName);
+                string fileName = Path.GetFileNameWithoutExtension(file.FileName) + "_" + GeneralPurpose.DateTimeNow().Ticks + Path.GetExtension(file.FileName);
 
                 // Combine the root folder and the generated filename
-                string filePath = Path.Combine(rootFolder, fileName);
+                string filePath = Path.Combine(fileDir, fileName);
 
                 if (!string.IsNullOrEmpty(oldProfile))
                 {
-                    string[] getName = oldProfile.Split("/");
-
-                    // Check if a profile picture already exists for the user
-                    string existingProfilePicturePath = Path.Combine(rootFolder, getName.Last());
-                    if (System.IO.File.Exists(existingProfilePicturePath))
-                    {
-                        System.IO.File.Delete(existingProfilePicturePath);
-                    }
+                    await DeleteFile(oldProfile, fileDir);
                 }
-                
-                //if (!string.IsNullOrEmpty(way))
-                //{
-                //    // Resize the image before saving
-                //    using (var image = SixLabors.ImageSharp.Image.Load(file.OpenReadStream()))
-                //    {
-                //        var imageEncoder = new JpegEncoder
-                //        {
-                //            Quality = 100 // Set JPEG quality to 100 (maximum quality)
-                //        };
 
-                //        var width = 220;
-                //        var height = 220;
-                //        if (image.Width > image.Height)
-                //        {
-                //            height = (int)((image.Height / (double)image.Width) * width);
-                //        }
-                //        else
-                //        {
-                //            width = (int)((image.Width / (double)image.Height) * height);
-                //        }
-
-                //        image.Mutate(x => x.Resize(new ResizeOptions
-                //        {
-                //            //Size = new Size(220, 220), // Resize to 220x220 pixels
-                //            Size = new Size(width, height), // Resize to 220x220 pixels
-                //            Mode = ResizeMode.Max,
-                //            //Position = AnchorPositionMode.Center,
-                //        }));
-                //        //Save the resized image with high quality
-                //        image.Save(filePath, imageEncoder);
-
-                //        //// Resize the image to fit within 220x220
-                //        //image.Mutate(x => x.Resize(new ResizeOptions
-                //        //{
-                //        //    Size = new Size(220, 220),
-                //        //    Mode = ResizeMode.BoxPad,
-                //        //    Position = AnchorPositionMode.Center,
-                //        //}));
-
-                //        //// Create a new image with the desired size and fill it with the background color
-                //        //using (var newImage = new Image<Rgba32>(configuration: new Configuration(), 220, 220, Color.White))
-                //        //{
-                //        //    // Overlay the resized image onto the new image
-                //        //    newImage.Mutate(ctx => ctx.DrawImage(image, new Point(0, 0), 1f));
-
-                //        //    // Save the final image
-                //        //    newImage.Save(filePath, imageEncoder);
-                //        //}
-                //    }
-                //}
-                //else
-                //{
-                    using (var stream = new FileStream(filePath, FileMode.Create))
-                    {
-                        await file.CopyToAsync(stream);
-                    }
-                //}
-
-                
-
-                // You can save the filePath to a database or return it as needed
-                Console.WriteLine($"File uploaded to: {filePath}");
-
-                if (!string.IsNullOrEmpty(way))
+                if (!await SaveFile(file, filePath))
                 {
-                    return "/UserTile/" + fileName;
+                    return "Something went wrong";
                 }
-                else
-                {
-                    return "/UserProfile/" + fileName;
-                }
+                string[] getFileUrl = filePath.Split("wwwroot/");
+                string actualPath = getFileUrl.Last();
+
+                return actualPath;
                 
             }
             catch (Exception ex)
@@ -197,5 +118,62 @@ namespace HealthGuage.HelpingClasses
             }
         }
 
+
+        public static void CreateUserDirectory(string? Id = "")
+        {
+            var rootDir = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+            var userDir = Path.Combine(rootDir, "users");
+            var uIdDir = Path.Combine(userDir, "user" + Id);
+            var menusDir = Path.Combine(uIdDir, "menus");
+
+            if (!Directory.Exists(userDir))
+                Directory.CreateDirectory(userDir);
+
+            if (!Directory.Exists(uIdDir))
+                Directory.CreateDirectory(uIdDir);
+
+            if (!Directory.Exists(menusDir))
+                Directory.CreateDirectory(menusDir);
+        }
+
+        private static async Task<bool> DeleteFile(string oldProfile, string fileDir)
+        {
+            try
+            {
+                string[] getName = oldProfile.Split("/");
+
+                // Check if a profile picture already exists for the user
+                string existingProfilePicturePath = Path.Combine(fileDir, getName.Last());
+                if (System.IO.File.Exists(existingProfilePicturePath))
+                {
+                    System.IO.File.Delete(existingProfilePicturePath);
+                }
+
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        private static async Task<bool> SaveFile(IFormFile file, string filePath)
+        {
+            try
+            {
+                var stream = new MemoryStream();
+                await file.CopyToAsync(stream);
+                var bytes = stream.ToArray();
+                stream.Close();
+
+                await System.IO.File.WriteAllBytesAsync(filePath, bytes);
+
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
     }
 }

@@ -1,5 +1,226 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@{
 }
+
+<div class="panel p-20 m-10">
+
+    <div class="row">
+        <center><u><h3>Menu List</h3></u></center>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8"></div>
+        <div class="col-md-2 pull-right btn-block">
+            <a href="@Url.Action("AddMenu", "Menu")" class="btn btn-primary m-5 pull-right">Add New</a>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table text-md-nowrap table-striped table-bordered text-center no-footer" id="MenuTable">
+            <thead class="bg-indigo-800">
+                <tr>
+                    <th class="text-bold" hidden>...</th>
+                    <th class="text-bold text-center">
+                        Name
+                    </th>
+                    <th class="text-bold text-center">
+                        Date
+                    </th>
+                    <th class="text-bold text-center">
+                        Photo
+                    </th>
+                    <th class="text-bold text-center">
+                        Link
+                    </th>
+                    <th class="text-bold text-center">
+                        Cooking
+                    </th>
+                    <th class="text-bold text-center">
+                        Weight
+                    </th>
+                    <th class="text-bold text-center">
+                        Created By
+                    </th>
+                    <th class="text-bold text-center">
+                        Action
+                    </th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+
+<script>
+    loadTable();
+    function loadTable(Name) {
+        $('#MenuTable').DataTable().clear();
+        $('#MenuTable').DataTable().destroy();
+        $('#MenuTable').DataTable(
+            {
+                "ajax":
+                {
+                    "url": '@Url.Action("GetList", "Menu")',
+                    "type": "POST",
+                    "datatype": "json",
+                    "data": { Name: Name }
+                },
+                'columns':
+                    [
+                        { "data": "hidden", "name": "0" },
+                        { "data": "date", "name": "Date" },
+                        { "data": "photo", "name": "0" },
+                        { "data": "link", "name": "Link" },
+                        { "data": "cooking", "name": "Cooking" },
+                        { "data": "weight", "name": "Weight" },
+                        { "data": "createdBy", "name": "CreatedBy" },
+                    ],
+                'columnDefs':
+                    [
+                        {
+                            "targets": 0,
+                            "visible": false,
+                            "searchable": false,
+                            "render": function (data, type, full, meta) {
+                                return null;
+                            }
+                        },
+                        {
+                            "targets": 1,
+                            'className': '',
+                            "render": function (data, type, full, meta) {
+                                return full.name;
+                            }
+                        },
+                        {
+                            "targets": 2,
+                            'className': '',
+                            "render": function (data, type, full, meta) {
+                                return full.date;
+                            }
+                        },
+                        {
+                            "targets": 3,
+                            'className': '',
+                            'sortable': false,
+                            'searchable':false,
+                            "render": function (data, type, full, meta) {
+                                if (full.photo != null) {
+                                    return "<a href='../"+full.photo+"' target='_blank'><img src=../" + full.photo + " width='75'/></a>";
+                                }
+                                else {
+                                    return "<span class='text-danger'>----</span>";
+                                }
+
+                            }
+                        },
+                        {
+                            "targets": 4,
+                            'className': '',
+                            'sortable': false,
+                            'searchable': false,
+                            "render": function (data, type, full, meta) {
+                                if (full.link != null) {
+                                    return "<a href=" + full.link + " targe='_blank'>"+full.link+"</a>";
+                                }
+                                else {
+                                    return "<span class='text-danger'>----</span>";
+                                }
+
+                            }
+                        },
+                        {
+                            "targets": 5,
+                            'className': '',
+                            "render": function (data, type, full, meta) {
+                                if (full.cooking != null) {
+                                    return full.cooking;
+                                }
+                                else {
+                                    return "<span class='text-danger'>----</span>";
+                                }
+
+                            }
+                        },
+                        {
+                            "targets": 6,
+                            'className': '',
+                            "render": function (data, type, full, meta) {
+                                if (full.weight != null) {
+                                    return full.weight;
+                                }
+                                else {
+                                    return "<span class='text-danger'>----</span>";
+                                }
+
+                            }
+                        },
+                        {
+                            "targets": 7,
+                            'className': '',
+                            "render": function (data, type, full, meta) {
+                                if (full.createdBy != null) {
+                                    return full.createdBy;
+                                }
+                                else {
+                                    return "<span class='text-danger'>----</span>";
+                                }
+
+                            }
+                        },
+                        {
+                            "targets": 8,
+                            'className': '',
+                            'sortable': false,
+                            "render": function (data, type, full, meta) {
+                                return '<ul class="icons-list"> ' +
+                                    '<li class="dropdown" >' +
+                                    '			<a href="#" class="dropdown-toggle" data-toggle="dropdown">' +
+                                    '				<i class="icon-menu9"></i>' +
+                                    '			</a>' +
+                                    '			<ul class="dropdown-menu dropdown-menu-right"  style="padding:5px !important; min-width:100px !important;">' +
+                                    '				<li>' +
+                                    '                   <a style="display:inline-block; background-color:#00BCD4" class="btn text-white btn-sm bg-info icon-pencil" href="../Menu/UpdateMenu?encId=' + full.encId + '" title="Edit"></a>' +
+                                    '                   <button class="btn btn-sm bg-danger icon-bin" onclick="deleteFunction(\'' + full.encId + '\')" title="Delete"></button>' +
+                                    '               </li>' +
+                                    '			</ul>' +
+                                    '		</li >' +
+                                    '	</ul >';
+                            }
+                        },
+                    ],
+                "serverSide": "true",
+                "processing": "true",
+                "language":
+                {
+                    "processing": "<i class='icon-spinner spinner icon-2x'></i>",
+                    "search": "<span>Search :</span> _INPUT_",
+                    "searchPlaceholder": "Filter Data",
+                    "lengthMenu": "<span>Show :</span> _MENU_",
+                    "paginate": { 'first': 'First', 'last': 'Last', 'next': '&rarr;', 'previous': '&larr;' }
+                }
+            });
+    }
+
+    function searchTable() {
+        var name = $('#searchName').val();
+        loadTable(name);
+    }
+
+    function clearSearch() {
+        $('#searchName').val("");
+        loadTable();
+    }
+
+    function deleteFunction(id) {
+        $('#confirmModalHeading').text('Warning!');
+        $('#confirmModalHeader').removeClass('bg-success');
+        $('#confirmModalHeader').addClass('bg-danger');
+        $('#confirmModalText').empty();
+        $('#confirmModalText').append('Do you really want to delete this Menu?<br />' +
+            'This record is going to permanently delete from our system.<br />' +
+            'The action cannot be undone.');
+
+        $("#confirmModalForm").attr("action", "../Menu/DeleteMenu?id=" + id);
+
+        $('#confirmModal').modal('show');
+    }
+</script>

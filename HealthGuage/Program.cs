@@ -20,6 +20,7 @@ builder.Services.AddScoped<IContentFileRepo, ContentFileRepo>();
 builder.Services.AddScoped<IIngredientRepo, IngredientRepo>();
 builder.Services.AddScoped<IProductRepo, ProductRepo>();
 builder.Services.AddScoped<IPreperationRepo, PreperationRepo>();
+builder.Services.AddScoped<IMenuRepo, MenuRepo>();
 
 builder.Services.AddScoped<ExceptionFilter>();
 builder.Services.AddScoped<ValidationFilter>();

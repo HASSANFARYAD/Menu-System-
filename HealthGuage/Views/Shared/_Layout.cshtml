@@ -60,8 +60,9 @@
 
     <script type="text/javascript" src="~/assets/js/plugins/notifications/pnotify.min.js"></script>
 
+    <script type="text/javascript" src="~/assets/js/plugins/forms/selects/bootstrap_multiselect.js"></script>
     <script type="text/javascript" src="~/assets/js/core/app.js"></script>
-
+    <script type="text/javascript" src="~/assets/js/pages/form_multiselect.js"></script>
     @*<script type="text/javascript" src="~/assets/js/pages/components_notifications_pnotify.js"></script>*@
     <script type="text/javascript" src="~/assets/js/plugins/notifications/CustomePnotify.js"></script>
 
@@ -103,6 +104,9 @@
             pointer-events: none;
         }
 
+        .bg-lightgrey{
+            background:#f9f9f9;
+        }
     </style>
 
 </head>
@@ -214,7 +218,7 @@
                             }
                             else
                             {
-                                <img src="..@loggedinUser.Profile" class="img-circle img-responsive" alt="">
+                                <img src="../@loggedinUser.Profile" class="img-circle img-responsive" alt="">
                             }
                         </a>
                             <h6>@loggedinUser.Name</h6>
@@ -329,7 +333,7 @@
         }
 
         //function Used to hide automatically alert message after 4 seconds
-        $("#alertMsg").fadeTo(4000, 500).slideUp(500, function () {
+        $("#alertMsg").fadeTo(3000, 500).slideUp(500, function () {
             $("#alertMsg").slideUp(600);
         });
 

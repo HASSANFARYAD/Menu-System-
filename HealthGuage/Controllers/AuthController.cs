@@ -271,7 +271,7 @@ namespace HealthGuage.Controllers
 
                     if (FileExt.ToLower().Equals(".jpg") || FileExt.ToLower().Equals(".png") || FileExt.ToLower().Equals(".jpeg"))
                     {
-                        string updatedProfile = await GeneralPurpose.UploadProfilePicture(_user.File, u.ProfilePicture);
+                        string updatedProfile = await GeneralPurpose.UploadProfilePicture(_user.File, u.ProfilePicture, "", _user.Id.ToString());
                         u.ProfilePicture = string.IsNullOrEmpty(updatedProfile) ? u.ProfilePicture : updatedProfile;
                     }
                     else

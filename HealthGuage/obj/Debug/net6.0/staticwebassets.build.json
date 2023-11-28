@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "ZsAf5Crm/dLwkV8C2FbRqO1QwROIQZvBryFzqvao4lI=",
+  "Hash": "Bt+xCDjS7rTsPmqNIGcoCIrD0CHsZ1nLyJFemgxT0Ho=",
   "Source": "Template",
   "BasePath": "_content/Template",
   "Mode": "Default",
@@ -43263,6 +43263,57 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\UserProfile\\ProfileImage638366638481129923.png"
+    },
+    {
+      "Identity": "D:\\Nodlays Other Projects\\Heather\\HealthGuage\\wwwroot\\users\\user1\\1688674044476_638367331018790648.jpg",
+      "SourceId": "Template",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\Nodlays Other Projects\\Heather\\HealthGuage\\wwwroot\\",
+      "BasePath": "_content/Template",
+      "RelativePath": "users/user1/1688674044476_638367331018790648.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\users\\user1\\1688674044476_638367331018790648.jpg"
+    },
+    {
+      "Identity": "D:\\Nodlays Other Projects\\Heather\\HealthGuage\\wwwroot\\users\\user1\\menus\\Downeast-Maine-Pumpkin-Bread-2000-255c5ea681cb47e0adb009c13e1bce61_638367401505923124.jpg",
+      "SourceId": "Template",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\Nodlays Other Projects\\Heather\\HealthGuage\\wwwroot\\",
+      "BasePath": "_content/Template",
+      "RelativePath": "users/user1/menus/Downeast-Maine-Pumpkin-Bread-2000-255c5ea681cb47e0adb009c13e1bce61_638367401505923124.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\users\\user1\\menus\\Downeast-Maine-Pumpkin-Bread-2000-255c5ea681cb47e0adb009c13e1bce61_638367401505923124.jpg"
+    },
+    {
+      "Identity": "D:\\Nodlays Other Projects\\Heather\\HealthGuage\\wwwroot\\users\\user1\\menus\\ssss_638367352729922717.PNG",
+      "SourceId": "Template",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\Nodlays Other Projects\\Heather\\HealthGuage\\wwwroot\\",
+      "BasePath": "_content/Template",
+      "RelativePath": "users/user1/menus/ssss_638367352729922717.PNG",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\users\\user1\\menus\\ssss_638367352729922717.PNG"
     }
   ]
 }
