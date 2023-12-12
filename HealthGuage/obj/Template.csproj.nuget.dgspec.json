@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Nodlays Other Projects\\Heather\\HealthGuage\\Template.csproj": {}
+    "C:\\Users\\HP\\Downloads\\Heather\\Heather\\Heather\\HealthGuage\\Template.csproj": {}
   },
   "projects": {
-    "D:\\Nodlays Other Projects\\Heather\\HealthGuage\\Template.csproj": {
+    "C:\\Users\\HP\\Downloads\\Heather\\Heather\\Heather\\HealthGuage\\Template.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Nodlays Other Projects\\Heather\\HealthGuage\\Template.csproj",
+        "projectUniqueName": "C:\\Users\\HP\\Downloads\\Heather\\Heather\\Heather\\HealthGuage\\Template.csproj",
         "projectName": "Template",
-        "projectPath": "D:\\Nodlays Other Projects\\Heather\\HealthGuage\\Template.csproj",
+        "projectPath": "C:\\Users\\HP\\Downloads\\Heather\\Heather\\Heather\\HealthGuage\\Template.csproj",
         "packagesPath": "C:\\Users\\HP\\.nuget\\packages\\",
-        "outputPath": "D:\\Nodlays Other Projects\\Heather\\HealthGuage\\obj\\",
+        "outputPath": "C:\\Users\\HP\\Downloads\\Heather\\Heather\\Heather\\HealthGuage\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -48,6 +48,14 @@
             "ClosedXML": {
               "target": "Package",
               "version": "[0.102.1, )"
+            },
+            "DocumentFormat.OpenXml": {
+              "target": "Package",
+              "version": "[3.0.0, )"
+            },
+            "EPPlus": {
+              "target": "Package",
+              "version": "[7.0.2, )"
             },
             "MailKit": {
               "target": "Package",

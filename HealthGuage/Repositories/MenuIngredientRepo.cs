@@ -14,7 +14,6 @@ namespace Template.Repositories
         Task<bool> AddMenuIngredientWithoutSaving(MenuIngredient MenuIngredient);
         Task<bool> UpdateMenuIngredient(MenuIngredient MenuIngredient);
         Task<bool> DeleteMenuIngredient(int id);
-        Task<bool> ValidateName(string name, int id = -1);
         Task<bool> SaveChanges();
     }
 
@@ -104,7 +103,7 @@ namespace Template.Repositories
                 return false;
             }
         }
-        
+
         public async Task<bool> UpdateMenuIngredient(MenuIngredient MenuIngredient)
         {
             try
@@ -134,22 +133,6 @@ namespace Template.Repositories
             }
         }
 
-        public async Task<bool> ValidateName(string name, int id = -1)
-        {
-
-            int emailCount = 0;
-
-            if (id == -1)
-            {
-                emailCount = await context.MenuIngredient.CountAsync(x => x.IsActive == 1 && x.Name!.ToLower() == name.ToLower().Trim());
-            }
-            else
-            {
-                emailCount = await context.MenuIngredient.CountAsync(x => x.IsActive == 1 && x.Id != id && x.Name!.ToLower() == name.ToLower().Trim());
-            }
-
-            return emailCount == 0;
-        }
 
         public async Task<bool> SaveChanges()
         {
@@ -158,9 +141,10 @@ namespace Template.Repositories
                 await context.SaveChangesAsync();
                 return true;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return false;
             }
+        }
     }
 }

@@ -69,6 +69,34 @@
     </div>
 </div>
 
+<div class="modal fade" id="uploadModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="text-center text-bold">Upload Products</h5>
+                <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <form action="@Url.Action("PostUploadProducts","Product")" enctype="multipart/form-data" method="post" id="postAddIngre">
+                    <div class="form-group">
+                        <label class="text-bold">Upload Excel File <span class="text-danger">*</span></label>
+                        <input type="file" class="form-control" required="" name="ExcelFile">
+                    </div>
+                    <div class="modal-footer">
+                        <a target="_blank" href="~/assets/Templete.xlsx" style="margin-right:5px;" type="submit" id="subBtn" class="btn btn-success legitRipple">Download Template</a>
+                        <button type="submit" value="submit" class="btn btn-primary" id="addSubBtn">Add</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <div class="panel p-20 m-10">
 
@@ -77,8 +105,12 @@
     </div>
 
     <div class="row">
+        <div class="col-md-2">
+        </div>
         <div class="col-md-8"></div>
+
         <div class="col-md-2 pull-right btn-block">
+            @* <a onclick="UploadProducts()" class="btn btn-success m-5   legitRipple">Import File <i class="fa fa-file-excel-o" style="color: white;"></i></a> *@
             <a onclick="AddNewProduct()" class="btn btn-primary m-5 pull-right">Add New</a>
         </div>
     </div>
@@ -105,6 +137,10 @@
 
     function AddNewProduct() {
         $("#addModal").modal('show');
+    }    
+    
+    function UploadProducts() {
+        $("#uploadModal").modal('show');
     }
 
     function formSubmit(id) {

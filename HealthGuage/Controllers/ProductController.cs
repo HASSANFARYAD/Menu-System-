@@ -137,6 +137,46 @@ namespace Template.Controllers
         }
 
         [HttpPost]
+        public async Task<IActionResult> PostUploadProducts(IFormFile ExcelFile)
+        {
+            try
+            {
+                var getUserId = gp.GetUserClaims();
+
+                List<GeneralNameDto> ProductList = new List<GeneralNameDto>();
+                ProductList = GeneralPurpose.ReadFromExcel(ExcelFile);
+                int chkIfAllFieldsAddedCorrectly = 0;
+                foreach (GeneralNameDto Obj in ProductList)
+                {
+                    Product thisProduct = new Product
+                    {
+                        Name = Obj.Name,
+                        IsActive = 1,
+                        CreatedAt = GeneralPurpose.DateTimeNow(),
+                        CreatedBy = Convert.ToInt32(getUserId.Id)
+                    };
+                    if (!await _productRepo.AddProduct(thisProduct))
+                    {
+                        chkIfAllFieldsAddedCorrectly += 1;                 
+                    }
+                }
+                if(chkIfAllFieldsAddedCorrectly > 0)
+                {
+                    return RedirectToAction("UploadTurboCharger", "TurboCharger", new { msg = "Record Inserted With Errors", color = "red" });
+
+                }
+                return RedirectToAction("UploadTurboCharger", "TurboCharger", new { msg = "Records Inserted Successfully", color = "green" });
+
+            }
+            catch (Exception ex)
+            {
+                return RedirectToAction("UploadTurboCharger", "TurboCharger", new { msg = "Invalid Document or Excel Pattern", color = "red" });
+
+            }
+        }
+
+
+        [HttpPost]
         public async Task<IActionResult> PostUpdateProduct(Product _Product)
         {
             Product? Product = await _productRepo.GetProductById(_Product.Id);

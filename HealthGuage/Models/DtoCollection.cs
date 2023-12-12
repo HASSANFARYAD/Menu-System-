@@ -14,6 +14,11 @@ namespace HealthGuage.Models
         public int Role { get; set; }
     }
     
+    public class GeneralNameDto
+    {
+        public string? Name { get; set; }
+    }    
+    
     public class IngredientDto
     {
         public string? Id { get; set; }

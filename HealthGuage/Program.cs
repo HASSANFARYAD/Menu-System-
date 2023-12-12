@@ -5,6 +5,7 @@ using HealthGuage.Repositories;
 using LoginFinal.Filters;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
+using OfficeOpenXml;
 using Template.Models;
 using Template.Repositories;
 
@@ -14,6 +15,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
 builder.Services.Configure<ProjectVariables>(builder.Configuration.GetSection("ProjectVariables"));
+ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
 builder.Services.AddScoped<IUserRepo, UserRepo>();
 builder.Services.AddScoped<IContentFileRepo, ContentFileRepo>();
@@ -21,6 +23,7 @@ builder.Services.AddScoped<IIngredientRepo, IngredientRepo>();
 builder.Services.AddScoped<IProductRepo, ProductRepo>();
 builder.Services.AddScoped<IPreperationRepo, PreperationRepo>();
 builder.Services.AddScoped<IMenuRepo, MenuRepo>();
+builder.Services.AddScoped<IMenuIngredientRepo, MenuIngredientRepo>();
 
 builder.Services.AddScoped<ExceptionFilter>();
 builder.Services.AddScoped<ValidationFilter>();

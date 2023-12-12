@@ -48,10 +48,16 @@ namespace Template.Migrations
                     b.Property<int?>("IsActive")
                         .HasColumnType("int");
 
+                    b.Property<string>("Link")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Photo")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PreperationForBeaorStaff")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("UpdatedAt")
@@ -290,11 +296,11 @@ namespace Template.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2023, 11, 27, 5, 6, 22, 494, DateTimeKind.Local).AddTicks(309),
+                            CreatedAt = new DateTime(2023, 11, 29, 15, 20, 41, 66, DateTimeKind.Local).AddTicks(9030),
                             Email = "uzair.aslam02@gmail.com",
                             IsActive = 1,
                             Name = "Uzair Aslam",
-                            Password = "HiOr780Vl7KlkT5Miwg3a7u/VhSemRgUjYoeiGgI5C0=",
+                            Password = "p9mP0tjhY+V0cnRdvwwCHT7QsbTkSPtbzfQE6JT1aoI=",
                             PhoneNumber = "0000-0000000",
                             Role = 1
                         });

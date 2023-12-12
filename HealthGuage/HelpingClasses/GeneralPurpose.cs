@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication;
 using System.Security.Claims;
 using Template.HelpingClasses;
 using DocumentFormat.OpenXml.Wordprocessing;
+using OfficeOpenXml;
 
 
 namespace HealthGuage.HelpingClasses
@@ -175,5 +176,46 @@ namespace HealthGuage.HelpingClasses
                 return false;
             }
         }
+
+        #region Reading XML
+
+        public static List<GeneralNameDto> ReadFromExcel(IFormFile file)
+        {
+            try
+            {
+                List<GeneralNameDto> turboChargerList = new List<GeneralNameDto>();
+
+                using (var excelPackage = new ExcelPackage(file.OpenReadStream()))
+                {
+                    var worksheet = excelPackage.Workbook.Worksheets[0];
+                    int rowCount = worksheet.Dimension.Rows;
+
+                    for (int i = 2; i <= rowCount; i++)
+                    {
+                        GeneralNameDto obj = new GeneralNameDto
+                        {
+                            Name = GetCellValue(worksheet, i, 1),
+                        };
+
+                        turboChargerList.Add(obj);
+                    }
+                }
+                return turboChargerList;
+            }
+            catch (Exception e)
+            {
+                List<GeneralNameDto> GeneralNameDtoList = null;
+                return null;
+
+            }
+
+        }
+        private static string GetCellValue(ExcelWorksheet worksheet, int row, int col)
+        {
+            var cellValue = worksheet.Cells[row, col].Value;
+            return cellValue != null ? cellValue.ToString() : null;
+        }
+
+        #endregion
     }
 }
