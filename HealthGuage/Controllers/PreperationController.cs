@@ -12,12 +12,15 @@ namespace Template.Controllers
     {
         private readonly IUserRepo _userRepo;
         private readonly IPreperationRepo _preperationRepo;
+        private readonly IMenuPreperationRepo _menuPreperationRepo;
         private readonly GeneralPurpose gp;
 
-        public PreperationController(IUserRepo userRepo, IPreperationRepo preperationRepo, IHttpContextAccessor haccess)
+        public PreperationController(IUserRepo userRepo, IPreperationRepo preperationRepo,
+            IMenuPreperationRepo menuPreperationRepo, IHttpContextAccessor haccess)
         {
             _userRepo = userRepo;
             _preperationRepo = preperationRepo;
+            _menuPreperationRepo = menuPreperationRepo;
             gp = new GeneralPurpose(haccess);
         }
 
@@ -90,20 +93,27 @@ namespace Template.Controllers
             {
                 var userName = "";
                 var createdby = await _userRepo.GetUserById((int)u.CreatedBy);
-                if (Convert.ToInt32(getUserId.Id) == u.CreatedBy)
+                if (createdby != null)
                 {
-                    userName = "You";
+                    if (Convert.ToInt32(getUserId.Id) == u.CreatedBy)
+                    {
+                        userName = "You";
+                    }
+                    else
+                    {
+                        userName = createdby.Name;
+                    }
                 }
                 else
                 {
-                    userName = createdby.Name;
+                    userName = "user Deleted";
                 }
                 PreperationDto obj = new PreperationDto()
                 {
                     Id = u.Id.ToString(),
                     EncId = StringCipher.EncryptId(u.Id),
                     Name = u.Name,
-                    CreatedBy = createdby != null ? userName : "",
+                    CreatedBy = userName,
                 };
 
                 udto.Add(obj);
@@ -208,7 +218,11 @@ namespace Template.Controllers
         public async Task<IActionResult> DeletePreperation(string id)
         {
             int Id = StringCipher.DecryptId(id);
-
+            var count = await _menuPreperationRepo.GetActiveMenuPreperationCount(-1, -1, Id);
+            if (count > 0)
+            {
+                return RedirectToAction("Index", new { msg = "Record can't be deleted!", color = "red" });
+            }
             if (!await _preperationRepo.DeletePreperation(Id))
             {
                 return RedirectToAction("Index", new { msg = "Somethings' wrong", color = "red" });

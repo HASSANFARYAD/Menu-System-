@@ -11,12 +11,15 @@ namespace Template.Controllers
     public class ProductController : Controller
     {
         private readonly IUserRepo _userRepo;
+        private readonly IMenuProductRepo _menuProductRepo;
         private readonly IProductRepo _productRepo;
         private readonly GeneralPurpose gp;
 
-        public ProductController(IUserRepo userRepo, IProductRepo productRepo, IHttpContextAccessor haccess)
+        public ProductController(IUserRepo userRepo, IMenuProductRepo menuProductRepo,
+            IProductRepo productRepo, IHttpContextAccessor haccess)
         {
             _userRepo = userRepo;
+            _menuProductRepo = menuProductRepo;
             _productRepo = productRepo;
             gp = new GeneralPurpose(haccess);
         }
@@ -91,20 +94,27 @@ namespace Template.Controllers
             {
                 var userName = "";
                 var createdby = await _userRepo.GetUserById((int)u.CreatedBy);
-                if (Convert.ToInt32(getUserId.Id) == u.CreatedBy)
+                if (createdby != null)
                 {
-                    userName = "You";
+                    if (Convert.ToInt32(getUserId.Id) == u.CreatedBy)
+                    {
+                        userName = "You";
+                    }
+                    else
+                    {
+                        userName = createdby.Name;
+                    }
                 }
                 else
                 {
-                    userName = createdby.Name;
+                    userName = "user Deleted";
                 }
                 ProductDto obj = new ProductDto()
                 {
                     Id = u.Id.ToString(),
                     EncId = StringCipher.EncryptId(u.Id),
                     Name = u.Name,
-                    CreatedBy = createdby != null ? userName : "",
+                    CreatedBy = userName,
                 };
 
                 udto.Add(obj);
@@ -249,7 +259,11 @@ namespace Template.Controllers
         public async Task<IActionResult> DeleteProduct(string id)
         {
             int Id = StringCipher.DecryptId(id);
-
+            var count = await _menuProductRepo.GetActiveMenuProductCount(-1, -1, Id);
+            if(count > 0)
+            {
+                return RedirectToAction("Index", new { msg = "Record can't be deleted!", color = "red" });
+            }
             if (!await _productRepo.DeleteProduct(Id))
             {
                 return RedirectToAction("Index", new { msg = "Somethings' wrong", color = "red" });

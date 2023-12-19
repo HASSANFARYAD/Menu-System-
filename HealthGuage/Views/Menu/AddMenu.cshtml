@@ -38,7 +38,7 @@
                             <div class="form-group">
                                 <label class="text-bold">Menu Ingredients <i class="icon-spinner" id="ingredientsLoader" style="display:none"></i></label>
                                 <div class="multi-select-full bg-lightgrey border-bottom-grey">
-                                    <select multiple="multiple" class="select" id="ingredientsDropdown">
+                                    <select multiple="multiple" class="select" id="ingredientsDropdown" name="Ingredients">
                                         
                                     </select>
                                 </div>
@@ -47,7 +47,7 @@
                             <div class="form-group">
                                 <label class="text-bold">Menu Products <i class="icon-spinner" id="productsLoader" style="display:none"></i></label>
                                 <div class="multi-select-full bg-lightgrey border-bottom-grey">
-                                    <select multiple="multiple" class="select" id="productsDropdown">
+                                    <select multiple="multiple" class="select" id="productsDropdown" name="Products">
                                     </select>
                                 </div>
                             </div>
@@ -55,7 +55,7 @@
                             <div class="form-group">
                                 <label class="text-bold">Menu Preperations <i class="icon-spinner" id="preperationsLoader" style="display:none"></i></label>
                                 <div class="multi-select-full bg-lightgrey border-bottom-grey">
-                                    <select multiple="multiple" class="select" id="preperationsDropdown">
+                                    <select multiple="multiple" class="select" id="preperationsDropdown" name="Preperations">
                                     </select>
                                 </div>
                             </div>
@@ -77,12 +77,12 @@
 
                             <div class="form-group">
                                 <label class="text-bold">Photo</label>
-                                <input type="file" class="form-control bg-lightgrey" name="picture" accept="image/*">
+                                <input type="file" class="form-control bg-lightgrey" name="Picture" accept="image/*">
                             </div>
 
                             <div class="row">
                                 <div class="col-md-6">
-                                    <a href="@Url.Action("ViewMenu","Menu")" class="btn btn-primary"><i class="fa-solid fa fa-arrow-left position-left"></i> Back To List</a>
+                                    <a href="@Url.Action("Index","Menu")" class="btn btn-primary"><i class="fa-solid fa fa-arrow-left position-left"></i> Back To List</a>
                                 </div>
                                 <div class="col-md-6">
                                     <button type="submit" id="subBtn" disabled class="btn btn-primary pull-right">Add <i class="icon-database-insert position-right"></i></button>
@@ -172,6 +172,7 @@
                 },
                 complete: function (){
                     $("#preperationsLoader").css("display", "none");
+                    $("#subBtn").attr("disabled", false);
                 }
             });
         }

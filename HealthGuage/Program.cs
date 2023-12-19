@@ -24,6 +24,8 @@ builder.Services.AddScoped<IProductRepo, ProductRepo>();
 builder.Services.AddScoped<IPreperationRepo, PreperationRepo>();
 builder.Services.AddScoped<IMenuRepo, MenuRepo>();
 builder.Services.AddScoped<IMenuIngredientRepo, MenuIngredientRepo>();
+builder.Services.AddScoped<IMenuProductRepo, MenuProductRepo>();
+builder.Services.AddScoped<IMenuPreperationRepo, MenuPreperationRepo>();
 
 builder.Services.AddScoped<ExceptionFilter>();
 builder.Services.AddScoped<ValidationFilter>();

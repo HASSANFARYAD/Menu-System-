@@ -277,9 +277,9 @@
         $('#confirmModalHeader').removeClass('bg-success');
         $('#confirmModalHeader').addClass('bg-danger');
         $('#confirmModalText').empty();
-        $('#confirmModalText').append('Do you really want to delete this Preperation?<br />' +
-            'This record is going to permanently delete from our system.<br />' +
-            'The action cannot be undone.');
+        $('#confirmModalText').append('Are you sure you want to delete this Preperation?<br />' +
+            'This action will permanently remove the record from system, <br/> and it cannot be undone.<br />' +
+            '<br/>Please note that this operation is irreversible.');
 
         $("#confirmModalForm").attr("action", "../Preperation/DeletePreperation?id=" + id);
 

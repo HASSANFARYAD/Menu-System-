@@ -37,6 +37,19 @@
           }
         }
       },
+      "CsvHelper/30.0.1": {
+        "type": "package",
+        "compile": {
+          "lib/net6.0/CsvHelper.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net6.0/CsvHelper.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "DocumentFormat.OpenXml/3.0.0": {
         "type": "package",
         "dependencies": {
@@ -790,60 +803,6 @@
       },
       "MessagePackAnalyzer/2.1.152": {
         "type": "package"
-      },
-      "Microsoft.AspNetCore.Authorization/6.0.18": {
-        "type": "package",
-        "dependencies": {
-          "Microsoft.AspNetCore.Metadata": "6.0.18",
-          "Microsoft.Extensions.Logging.Abstractions": "6.0.4",
-          "Microsoft.Extensions.Options": "6.0.0"
-        },
-        "compile": {
-          "lib/net6.0/Microsoft.AspNetCore.Authorization.dll": {
-            "related": ".xml"
-          }
-        },
-        "runtime": {
-          "lib/net6.0/Microsoft.AspNetCore.Authorization.dll": {
-            "related": ".xml"
-          }
-        }
-      },
-      "Microsoft.AspNetCore.Components/6.0.18": {
-        "type": "package",
-        "dependencies": {
-          "Microsoft.AspNetCore.Authorization": "6.0.18",
-          "Microsoft.AspNetCore.Components.Analyzers": "6.0.18"
-        },
-        "compile": {
-          "lib/net6.0/Microsoft.AspNetCore.Components.dll": {
-            "related": ".xml"
-          }
-        },
-        "runtime": {
-          "lib/net6.0/Microsoft.AspNetCore.Components.dll": {
-            "related": ".xml"
-          }
-        }
-      },
-      "Microsoft.AspNetCore.Components.Analyzers/6.0.18": {
-        "type": "package",
-        "build": {
-          "buildTransitive/netstandard2.0/Microsoft.AspNetCore.Components.Analyzers.targets": {}
-        }
-      },
-      "Microsoft.AspNetCore.Metadata/6.0.18": {
-        "type": "package",
-        "compile": {
-          "lib/net6.0/Microsoft.AspNetCore.Metadata.dll": {
-            "related": ".xml"
-          }
-        },
-        "runtime": {
-          "lib/net6.0/Microsoft.AspNetCore.Metadata.dll": {
-            "related": ".xml"
-          }
-        }
       },
       "Microsoft.AspNetCore.Razor.Language/6.0.0": {
         "type": "package",
@@ -1798,7 +1757,7 @@
           }
         }
       },
-      "Microsoft.Extensions.Logging.Abstractions/6.0.4": {
+      "Microsoft.Extensions.Logging.Abstractions/6.0.0": {
         "type": "package",
         "compile": {
           "lib/net6.0/Microsoft.Extensions.Logging.Abstractions.dll": {
@@ -1811,7 +1770,7 @@
           }
         },
         "build": {
-          "buildTransitive/netcoreapp3.1/Microsoft.Extensions.Logging.Abstractions.targets": {}
+          "buildTransitive/netcoreapp3.1/_._": {}
         }
       },
       "Microsoft.Extensions.Options/6.0.0": {
@@ -4211,6 +4170,30 @@
         "nuget-logo.png"
       ]
     },
+    "CsvHelper/30.0.1": {
+      "sha512": "rcZtgbWR+As4G3Vpgx0AMNmShGuQLFjkHAPIIflzrfkJCx8/AOd4m96ZRmiU1Wi39qS5UVjV0P8qdgqOo5Cwyg==",
+      "type": "package",
+      "path": "csvhelper/30.0.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "csvhelper.30.0.1.nupkg.sha512",
+        "csvhelper.nuspec",
+        "lib/net45/CsvHelper.dll",
+        "lib/net45/CsvHelper.xml",
+        "lib/net47/CsvHelper.dll",
+        "lib/net47/CsvHelper.xml",
+        "lib/net5.0/CsvHelper.dll",
+        "lib/net5.0/CsvHelper.xml",
+        "lib/net6.0/CsvHelper.dll",
+        "lib/net6.0/CsvHelper.xml",
+        "lib/netstandard2.0/CsvHelper.dll",
+        "lib/netstandard2.0/CsvHelper.xml",
+        "lib/netstandard2.1/CsvHelper.dll",
+        "lib/netstandard2.1/CsvHelper.xml"
+      ]
+    },
     "DocumentFormat.OpenXml/3.0.0": {
       "sha512": "o2xu17+4VOT4gKwpEcL5UBNYWrP1HQGkfe+K+LHvq5/07UjpzoGMBQzWMhGimzgL1Q2lEPYAp7JgBNZWTcfGKw==",
       "type": "package",
@@ -5176,75 +5159,6 @@
         "messagepackanalyzer.nuspec",
         "tools/install.ps1",
         "tools/uninstall.ps1"
-      ]
-    },
-    "Microsoft.AspNetCore.Authorization/6.0.18": {
-      "sha512": "EG0nXXP49Sa2D/5Hak+kVxOloVJig0FHt+2u0u1ZWc25dyZ8gQeH2XtV4Zy3BlyqJbGOFsJ3D0TY08SXQ0McHg==",
-      "type": "package",
-      "path": "microsoft.aspnetcore.authorization/6.0.18",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "Icon.png",
-        "THIRD-PARTY-NOTICES.TXT",
-        "lib/net461/Microsoft.AspNetCore.Authorization.dll",
-        "lib/net461/Microsoft.AspNetCore.Authorization.xml",
-        "lib/net6.0/Microsoft.AspNetCore.Authorization.dll",
-        "lib/net6.0/Microsoft.AspNetCore.Authorization.xml",
-        "lib/netstandard2.0/Microsoft.AspNetCore.Authorization.dll",
-        "lib/netstandard2.0/Microsoft.AspNetCore.Authorization.xml",
-        "microsoft.aspnetcore.authorization.6.0.18.nupkg.sha512",
-        "microsoft.aspnetcore.authorization.nuspec"
-      ]
-    },
-    "Microsoft.AspNetCore.Components/6.0.18": {
-      "sha512": "iyK3AYe/4ttNP1r45CHO6ZAlBz71KcHo3IhP3qIp8RshCmmT+hBCJ9gDkHiRiR5cDlJmobUgqnDzcGOtDuLIpQ==",
-      "type": "package",
-      "path": "microsoft.aspnetcore.components/6.0.18",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "Icon.png",
-        "THIRD-PARTY-NOTICES.txt",
-        "lib/net6.0/Microsoft.AspNetCore.Components.dll",
-        "lib/net6.0/Microsoft.AspNetCore.Components.xml",
-        "microsoft.aspnetcore.components.6.0.18.nupkg.sha512",
-        "microsoft.aspnetcore.components.nuspec"
-      ]
-    },
-    "Microsoft.AspNetCore.Components.Analyzers/6.0.18": {
-      "sha512": "Kfe+FjOvXBnBv3JQkwchoayL7SYiwrIvzJdzwx8t9WcyVBPOzT3hCXxODxXnjRyv33hrTtXNS0CiDkurJEpsAA==",
-      "type": "package",
-      "path": "microsoft.aspnetcore.components.analyzers/6.0.18",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "Icon.png",
-        "THIRD-PARTY-NOTICES.txt",
-        "analyzers/dotnet/cs/Microsoft.AspNetCore.Components.Analyzers.dll",
-        "build/netstandard2.0/Microsoft.AspNetCore.Components.Analyzers.targets",
-        "buildTransitive/netstandard2.0/Microsoft.AspNetCore.Components.Analyzers.targets",
-        "microsoft.aspnetcore.components.analyzers.6.0.18.nupkg.sha512",
-        "microsoft.aspnetcore.components.analyzers.nuspec"
-      ]
-    },
-    "Microsoft.AspNetCore.Metadata/6.0.18": {
-      "sha512": "jUdslp9xdZqvTfF2to6gNPTpUKzSd1aYGtIa8IIyBI9JruhBBsoOYsqLJNsBPNkyxiZExLFivTmS2D/vurpy2g==",
-      "type": "package",
-      "path": "microsoft.aspnetcore.metadata/6.0.18",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "Icon.png",
-        "THIRD-PARTY-NOTICES.TXT",
-        "lib/net461/Microsoft.AspNetCore.Metadata.dll",
-        "lib/net461/Microsoft.AspNetCore.Metadata.xml",
-        "lib/net6.0/Microsoft.AspNetCore.Metadata.dll",
-        "lib/net6.0/Microsoft.AspNetCore.Metadata.xml",
-        "lib/netstandard2.0/Microsoft.AspNetCore.Metadata.dll",
-        "lib/netstandard2.0/Microsoft.AspNetCore.Metadata.xml",
-        "microsoft.aspnetcore.metadata.6.0.18.nupkg.sha512",
-        "microsoft.aspnetcore.metadata.nuspec"
       ]
     },
     "Microsoft.AspNetCore.Razor.Language/6.0.0": {
@@ -6343,10 +6257,10 @@
         "useSharedDesignerContext.txt"
       ]
     },
-    "Microsoft.Extensions.Logging.Abstractions/6.0.4": {
-      "sha512": "K14wYgwOfKVELrUh5eBqlC8Wvo9vvhS3ZhIvcswV2uS/ubkTRPSQsN557EZiYUSSoZNxizG+alN4wjtdyLdcyw==",
+    "Microsoft.Extensions.Logging.Abstractions/6.0.0": {
+      "sha512": "/HggWBbTwy8TgebGSX5DBZ24ndhzi93sHUBDvP1IxbZD7FDokYzdAr6+vbWGjw2XAfR2EJ1sfKUotpjHnFWPxA==",
       "type": "package",
-      "path": "microsoft.extensions.logging.abstractions/6.0.4",
+      "path": "microsoft.extensions.logging.abstractions/6.0.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -6381,16 +6295,16 @@
         "analyzers/dotnet/roslyn4.0/cs/tr/Microsoft.Extensions.Logging.Generators.resources.dll",
         "analyzers/dotnet/roslyn4.0/cs/zh-Hans/Microsoft.Extensions.Logging.Generators.resources.dll",
         "analyzers/dotnet/roslyn4.0/cs/zh-Hant/Microsoft.Extensions.Logging.Generators.resources.dll",
+        "build/Microsoft.Extensions.Logging.Abstractions.targets",
         "buildTransitive/netcoreapp2.0/Microsoft.Extensions.Logging.Abstractions.targets",
-        "buildTransitive/netcoreapp3.1/Microsoft.Extensions.Logging.Abstractions.targets",
-        "buildTransitive/netstandard2.0/Microsoft.Extensions.Logging.Abstractions.targets",
+        "buildTransitive/netcoreapp3.1/_._",
         "lib/net461/Microsoft.Extensions.Logging.Abstractions.dll",
         "lib/net461/Microsoft.Extensions.Logging.Abstractions.xml",
         "lib/net6.0/Microsoft.Extensions.Logging.Abstractions.dll",
         "lib/net6.0/Microsoft.Extensions.Logging.Abstractions.xml",
         "lib/netstandard2.0/Microsoft.Extensions.Logging.Abstractions.dll",
         "lib/netstandard2.0/Microsoft.Extensions.Logging.Abstractions.xml",
-        "microsoft.extensions.logging.abstractions.6.0.4.nupkg.sha512",
+        "microsoft.extensions.logging.abstractions.6.0.0.nupkg.sha512",
         "microsoft.extensions.logging.abstractions.nuspec",
         "useSharedDesignerContext.txt"
       ]
@@ -11724,10 +11638,10 @@
   "projectFileDependencyGroups": {
     "net6.0": [
       "ClosedXML >= 0.102.1",
+      "CsvHelper >= 30.0.1",
       "DocumentFormat.OpenXml >= 3.0.0",
       "EPPlus >= 7.0.2",
       "MailKit >= 4.1.0",
-      "Microsoft.AspNetCore.Components >= 6.0.18",
       "Microsoft.EntityFrameworkCore >= 6.0.18",
       "Microsoft.EntityFrameworkCore.SqlServer >= 6.0.18",
       "Microsoft.EntityFrameworkCore.Tools >= 6.0.18",
@@ -11745,11 +11659,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\HP\\Downloads\\Heather\\Heather\\Heather\\HealthGuage\\Template.csproj",
+      "projectUniqueName": "E:\\New folder\\heather\\HealthGuage\\Template.csproj",
       "projectName": "Template",
-      "projectPath": "C:\\Users\\HP\\Downloads\\Heather\\Heather\\Heather\\HealthGuage\\Template.csproj",
+      "projectPath": "E:\\New folder\\heather\\HealthGuage\\Template.csproj",
       "packagesPath": "C:\\Users\\HP\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\HP\\Downloads\\Heather\\Heather\\Heather\\HealthGuage\\obj\\",
+      "outputPath": "E:\\New folder\\heather\\HealthGuage\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -11787,6 +11701,10 @@
             "target": "Package",
             "version": "[0.102.1, )"
           },
+          "CsvHelper": {
+            "target": "Package",
+            "version": "[30.0.1, )"
+          },
           "DocumentFormat.OpenXml": {
             "target": "Package",
             "version": "[3.0.0, )"
@@ -11798,10 +11716,6 @@
           "MailKit": {
             "target": "Package",
             "version": "[4.1.0, )"
-          },
-          "Microsoft.AspNetCore.Components": {
-            "target": "Package",
-            "version": "[6.0.18, )"
           },
           "Microsoft.EntityFrameworkCore": {
             "target": "Package",
@@ -11857,7 +11771,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.401\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.100\\RuntimeIdentifierGraph.json"
       }
     }
   }

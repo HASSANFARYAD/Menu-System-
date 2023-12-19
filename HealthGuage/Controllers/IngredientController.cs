@@ -89,19 +89,26 @@ namespace Template.Controllers
 			{
 				var userName = "";
 				var createdby = await _userRepo.GetUserById((int)u.CreatedBy);
-				if(Convert.ToInt32(getUserId.Id) == u.CreatedBy)
-				{
-					userName = "You";
+                if (createdby != null)
+                {
+                    if (Convert.ToInt32(getUserId.Id) == u.CreatedBy)
+                    {
+                        userName = "You";
+                    }
+                    else
+                    {
+                        userName = createdby.Name;
+                    }
                 }
-				else
-				{
-					userName = createdby.Name;
-				}
-				IngredientDto obj = new IngredientDto()
+                else
+                {
+                    userName = "user Deleted";
+                }
+                IngredientDto obj = new IngredientDto()
 				{
 					Id = StringCipher.EncryptId(u.Id),
 					Name = u.Name,
-					CreatedBy = createdby != null ? userName : "",
+					CreatedBy =  userName,
 				};
 
 				udto.Add(obj);

@@ -8,8 +8,9 @@ namespace Template.Repositories
     {
         Task<MenuIngredient?> GetMenuIngredientById(int id);
         Task<bool> IsMenuIngredientValidate(int id);
-        Task<int> GetActiveMenuIngredientCount(int id = -1);
+        Task<int> GetActiveMenuIngredientCount(int id = -1, int menuId = -1, int ingredientId = -1);
         Task<IEnumerable<MenuIngredient>> GetActiveMenuIngredientList(int id = -1);
+        Task<IEnumerable<MenuIngredient>> GetActiveMenuIngredientListByMenuId(int id = -1);
         Task<bool> AddMenuIngredient(MenuIngredient MenuIngredient);
         Task<bool> AddMenuIngredientWithoutSaving(MenuIngredient MenuIngredient);
         Task<bool> UpdateMenuIngredient(MenuIngredient MenuIngredient);
@@ -33,11 +34,19 @@ namespace Template.Repositories
             return await context.MenuIngredient.FirstOrDefaultAsync(x => x.Id == id && x.IsActive == 1);
         }
 
-        public async Task<int> GetActiveMenuIngredientCount(int id = -1)
+        public async Task<int> GetActiveMenuIngredientCount(int id = -1, int menuId = -1, int ingredientId = -1)
         {
             if (id != -1)
             {
                 return await context.MenuIngredient.CountAsync(x => x.IsActive == 1);
+            }
+            else if (menuId != -1)
+            {
+                return await context.MenuIngredient.CountAsync(x => x.IsActive == 1 && x.MenuId == menuId);
+            }
+            else if (ingredientId != -1)
+            {
+                return await context.MenuIngredient.CountAsync(x => x.IsActive == 1 && x.IngredientId == ingredientId);
             }
             else
             {
@@ -57,6 +66,14 @@ namespace Template.Repositories
                 var MenuIngredient = await context.MenuIngredient.Where(x => x.IsActive == 1 && x.CreatedBy == id).OrderByDescending(x => x.Id).ToListAsync();
                 return MenuIngredient;
             }
+        }
+
+        
+
+        public async Task<IEnumerable<MenuIngredient>> GetActiveMenuIngredientListByMenuId(int id = -1)
+        {
+            var MenuIngredient = await context.MenuIngredient.Where(x => x.IsActive == 1 && x.MenuId == id).OrderByDescending(x => x.Id).ToListAsync();
+            return MenuIngredient;
         }
 
 

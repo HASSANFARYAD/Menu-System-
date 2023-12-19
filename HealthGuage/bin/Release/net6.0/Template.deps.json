@@ -9,10 +9,10 @@
       "Template/1.0.0": {
         "dependencies": {
           "ClosedXML": "0.102.1",
+          "CsvHelper": "30.0.1",
           "DocumentFormat.OpenXml": "3.0.0",
           "EPPlus": "7.0.2",
           "MailKit": "4.1.0",
-          "Microsoft.AspNetCore.Components": "6.0.18",
           "Microsoft.EntityFrameworkCore": "6.0.18",
           "Microsoft.EntityFrameworkCore.SqlServer": "6.0.18",
           "Microsoft.EntityFrameworkCore.Tools": "6.0.18",
@@ -48,6 +48,14 @@
           "lib/netstandard2.1/ClosedXML.dll": {
             "assemblyVersion": "0.102.1.0",
             "fileVersion": "0.102.1.0"
+          }
+        }
+      },
+      "CsvHelper/30.0.1": {
+        "runtime": {
+          "lib/net6.0/CsvHelper.dll": {
+            "assemblyVersion": "30.0.0.0",
+            "fileVersion": "30.0.1.0"
           }
         }
       },
@@ -711,40 +719,6 @@
         }
       },
       "MessagePackAnalyzer/2.1.152": {},
-      "Microsoft.AspNetCore.Authorization/6.0.18": {
-        "dependencies": {
-          "Microsoft.AspNetCore.Metadata": "6.0.18",
-          "Microsoft.Extensions.Logging.Abstractions": "6.0.4",
-          "Microsoft.Extensions.Options": "6.0.0"
-        },
-        "runtime": {
-          "lib/net6.0/Microsoft.AspNetCore.Authorization.dll": {
-            "assemblyVersion": "6.0.0.0",
-            "fileVersion": "6.0.1823.26909"
-          }
-        }
-      },
-      "Microsoft.AspNetCore.Components/6.0.18": {
-        "dependencies": {
-          "Microsoft.AspNetCore.Authorization": "6.0.18",
-          "Microsoft.AspNetCore.Components.Analyzers": "6.0.18"
-        },
-        "runtime": {
-          "lib/net6.0/Microsoft.AspNetCore.Components.dll": {
-            "assemblyVersion": "6.0.0.0",
-            "fileVersion": "6.0.1823.26909"
-          }
-        }
-      },
-      "Microsoft.AspNetCore.Components.Analyzers/6.0.18": {},
-      "Microsoft.AspNetCore.Metadata/6.0.18": {
-        "runtime": {
-          "lib/net6.0/Microsoft.AspNetCore.Metadata.dll": {
-            "assemblyVersion": "6.0.0.0",
-            "fileVersion": "6.0.1823.26909"
-          }
-        }
-      },
       "Microsoft.AspNetCore.Razor.Language/6.0.0": {
         "runtime": {
           "lib/netstandard2.0/Microsoft.AspNetCore.Razor.Language.dll": {
@@ -1362,7 +1336,7 @@
         "dependencies": {
           "Microsoft.Extensions.Caching.Abstractions": "6.0.0",
           "Microsoft.Extensions.DependencyInjection.Abstractions": "6.0.0",
-          "Microsoft.Extensions.Logging.Abstractions": "6.0.4",
+          "Microsoft.Extensions.Logging.Abstractions": "6.0.0",
           "Microsoft.Extensions.Options": "6.0.0",
           "Microsoft.Extensions.Primitives": "6.0.0"
         },
@@ -1432,19 +1406,12 @@
         "dependencies": {
           "Microsoft.Extensions.DependencyInjection": "6.0.1",
           "Microsoft.Extensions.DependencyInjection.Abstractions": "6.0.0",
-          "Microsoft.Extensions.Logging.Abstractions": "6.0.4",
+          "Microsoft.Extensions.Logging.Abstractions": "6.0.0",
           "Microsoft.Extensions.Options": "6.0.0",
           "System.Diagnostics.DiagnosticSource": "6.0.1"
         }
       },
-      "Microsoft.Extensions.Logging.Abstractions/6.0.4": {
-        "runtime": {
-          "lib/net6.0/Microsoft.Extensions.Logging.Abstractions.dll": {
-            "assemblyVersion": "6.0.0.0",
-            "fileVersion": "6.0.1823.26907"
-          }
-        }
-      },
+      "Microsoft.Extensions.Logging.Abstractions/6.0.0": {},
       "Microsoft.Extensions.Options/6.0.0": {
         "dependencies": {
           "Microsoft.Extensions.DependencyInjection.Abstractions": "6.0.0",
@@ -2800,6 +2767,13 @@
       "path": "closedxml/0.102.1",
       "hashPath": "closedxml.0.102.1.nupkg.sha512"
     },
+    "CsvHelper/30.0.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-rcZtgbWR+As4G3Vpgx0AMNmShGuQLFjkHAPIIflzrfkJCx8/AOd4m96ZRmiU1Wi39qS5UVjV0P8qdgqOo5Cwyg==",
+      "path": "csvhelper/30.0.1",
+      "hashPath": "csvhelper.30.0.1.nupkg.sha512"
+    },
     "DocumentFormat.OpenXml/3.0.0": {
       "type": "package",
       "serviceable": true,
@@ -3227,34 +3201,6 @@
       "path": "messagepackanalyzer/2.1.152",
       "hashPath": "messagepackanalyzer.2.1.152.nupkg.sha512"
     },
-    "Microsoft.AspNetCore.Authorization/6.0.18": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-EG0nXXP49Sa2D/5Hak+kVxOloVJig0FHt+2u0u1ZWc25dyZ8gQeH2XtV4Zy3BlyqJbGOFsJ3D0TY08SXQ0McHg==",
-      "path": "microsoft.aspnetcore.authorization/6.0.18",
-      "hashPath": "microsoft.aspnetcore.authorization.6.0.18.nupkg.sha512"
-    },
-    "Microsoft.AspNetCore.Components/6.0.18": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-iyK3AYe/4ttNP1r45CHO6ZAlBz71KcHo3IhP3qIp8RshCmmT+hBCJ9gDkHiRiR5cDlJmobUgqnDzcGOtDuLIpQ==",
-      "path": "microsoft.aspnetcore.components/6.0.18",
-      "hashPath": "microsoft.aspnetcore.components.6.0.18.nupkg.sha512"
-    },
-    "Microsoft.AspNetCore.Components.Analyzers/6.0.18": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-Kfe+FjOvXBnBv3JQkwchoayL7SYiwrIvzJdzwx8t9WcyVBPOzT3hCXxODxXnjRyv33hrTtXNS0CiDkurJEpsAA==",
-      "path": "microsoft.aspnetcore.components.analyzers/6.0.18",
-      "hashPath": "microsoft.aspnetcore.components.analyzers.6.0.18.nupkg.sha512"
-    },
-    "Microsoft.AspNetCore.Metadata/6.0.18": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-jUdslp9xdZqvTfF2to6gNPTpUKzSd1aYGtIa8IIyBI9JruhBBsoOYsqLJNsBPNkyxiZExLFivTmS2D/vurpy2g==",
-      "path": "microsoft.aspnetcore.metadata/6.0.18",
-      "hashPath": "microsoft.aspnetcore.metadata.6.0.18.nupkg.sha512"
-    },
     "Microsoft.AspNetCore.Razor.Language/6.0.0": {
       "type": "package",
       "serviceable": true,
@@ -3521,12 +3467,12 @@
       "path": "microsoft.extensions.logging/6.0.0",
       "hashPath": "microsoft.extensions.logging.6.0.0.nupkg.sha512"
     },
-    "Microsoft.Extensions.Logging.Abstractions/6.0.4": {
+    "Microsoft.Extensions.Logging.Abstractions/6.0.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-K14wYgwOfKVELrUh5eBqlC8Wvo9vvhS3ZhIvcswV2uS/ubkTRPSQsN557EZiYUSSoZNxizG+alN4wjtdyLdcyw==",
-      "path": "microsoft.extensions.logging.abstractions/6.0.4",
-      "hashPath": "microsoft.extensions.logging.abstractions.6.0.4.nupkg.sha512"
+      "sha512": "sha512-/HggWBbTwy8TgebGSX5DBZ24ndhzi93sHUBDvP1IxbZD7FDokYzdAr6+vbWGjw2XAfR2EJ1sfKUotpjHnFWPxA==",
+      "path": "microsoft.extensions.logging.abstractions/6.0.0",
+      "hashPath": "microsoft.extensions.logging.abstractions.6.0.0.nupkg.sha512"
     },
     "Microsoft.Extensions.Options/6.0.0": {
       "type": "package",

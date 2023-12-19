@@ -12,7 +12,7 @@
                 <div class="col-md-8 col-md-offset-2">
                     <div class="panel panel-flat">
                         <div class="panel-heading">
-                            <h2 class="panel-title text-center text-bold">New Menu</h2>
+                            <h2 class="panel-title text-center text-bold">Update Menu</h2>
                         </div>
 
                         <div class="panel-body">
@@ -33,6 +33,30 @@
                             <div class="form-group">
                                 <label class="text-bold">Cooking</label>
                                 <input type="text" class="form-control bg-lightgrey" value="@ViewBag.Menu.Cooking" name="Cooking" placeholder="">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="text-bold">Menu Ingredients <i class="icon-spinner" id="ingredientsLoader" style="display:none"></i></label>
+                                <div class="multi-select-full bg-lightgrey border-bottom-grey">
+                                    <select multiple="multiple" class="select" id="ingredientsDropdown" name="Ingredients">
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="text-bold">Menu Products <i class="icon-spinner" id="productsLoader" style="display:none"></i></label>
+                                <div class="multi-select-full bg-lightgrey border-bottom-grey">
+                                    <select multiple="multiple" class="select" id="productsDropdown" name="Products">
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="text-bold">Menu Preperations <i class="icon-spinner" id="preperationsLoader" style="display:none"></i></label>
+                                <div class="multi-select-full bg-lightgrey border-bottom-grey">
+                                    <select multiple="multiple" class="select" id="preperationsDropdown" name="Preperations">
+                                    </select>
+                                </div>
                             </div>
 
                             <div class="form-group">
@@ -57,10 +81,10 @@
 
                             <div class="row">
                                 <div class="col-md-6">
-                                    <a href="@Url.Action("ViewMenu","Menu")" class="btn btn-primary"><i class="fa-solid fa fa-arrow-left position-left"></i> Back To List</a>
+                                    <a href="@Url.Action("Index","Menu")" class="btn btn-primary"><i class="fa-solid fa fa-arrow-left position-left"></i> Back To List</a>
                                 </div>
                                 <div class="col-md-6">
-                                    <button type="submit" id="subBtn" class="btn btn-primary pull-right">Add <i class="icon-database-insert position-right"></i></button>
+                                    <button type="submit" id="subBtn" class="btn btn-primary pull-right">Update <i class="icon-database-insert position-right"></i></button>
                                 </div>
                             </div>
 
@@ -73,3 +97,87 @@
     </div>
 
 </div>
+
+@section Scripts{
+    <script>
+        var getIngredients = '@ViewBag.ingredients';
+        var ingredientsArray = getIngredients.split(',');
+
+        var getProducts = '@ViewBag.products';
+        var productsArray = getProducts.split(',');
+
+        var getPreparations = '@ViewBag.preparations';
+        var preparationsArray = getPreparations.split(',');
+
+        getIngredientsList();
+        function getIngredientsList() {
+            $("#ingredientsLoader").css("display", "inline-block");
+            $("#productsLoader").css("display", "inline-block");
+            $("#preperationsLoader").css("display", "inline-block");
+            $.ajax({
+                type: 'POST',
+                url: "../Ingredient/GetIngredientList",
+                dataType: "json",
+                success: function (response) {
+                    var appendDropdown = response.map(function (item) {
+                        var selected = ingredientsArray.includes(item.encId) ? ' selected' : '';
+                        return '<option value="' + item.encId + '"' + selected + '>' + item.name + '</option>';
+                    }).join('');
+
+                    $("#ingredientsDropdown").append(appendDropdown);
+                },
+                error: function (error) {
+
+                },
+                complete: function (){
+                    $("#ingredientsLoader").css("display", "none");
+                    getproductsList();
+                }
+            });
+        }
+
+        function getproductsList() {
+            $.ajax({
+                type: 'POST',
+                url: "../Product/GetProductList",
+                dataType: "json",
+                success: function (response) {
+                    var appendDropdown = response.map(function (item) {
+                        var selected = productsArray.includes(item.encId) ? ' selected' : '';
+                        return '<option value="' + item.encId + '"' + selected + '>' + item.name + '</option>';
+                    }).join('');
+                    $("#productsDropdown").append(appendDropdown);
+                },
+                error: function (error) {
+                    console.log("Product", error);
+                },
+                complete: function () {
+                    $("#productsLoader").css("display", "none");
+                    getPreperationList();
+                }
+            });
+        }
+
+        function getPreperationList() {
+            $.ajax({
+                type: 'POST',
+                url: "../Preperation/GetPreperationList",
+                dataType: "json",
+                success: function (response) {
+                    var appendDropdown = response.map(function (item) {
+                        var selected = preparationsArray.includes(item.encId) ? ' selected' : '';
+                        return '<option value="' + item.encId + '"' + selected + '>' + item.name + '</option>';
+                    }).join('');
+                    $("#preperationsDropdown").append(appendDropdown);
+                },
+                error: function (error) {
+                    console.log("Preperation", error);
+                },
+                complete: function () {
+                    $("#preperationsLoader").css("display", "none");
+                    $("#subBtn").attr("disabled", false);
+                }
+            });
+        }
+    </script>
+}
