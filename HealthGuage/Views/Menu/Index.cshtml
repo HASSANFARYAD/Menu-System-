@@ -37,6 +37,16 @@
                             <input type="date" placeholder="" class="form-control" id="searchEndDate">
                         </div>
                     </div>
+
+                    <div class="col-md-4 col-lg-4">
+                        <div class="form-group">
+                            <label class="text-bold">Category <span class="text-danger">*</span><i class="icon-spinner" id="categoriesLoader" style="display:none"></i></label>
+                            <div class="multi-select-full bg-lightgrey border-bottom-grey">
+                                <select class="select" id="categoriesDropdown" required>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="row">
                     <div class="col-md-3 col-sm-12 col-xs-12">
@@ -86,6 +96,12 @@
                             Date
                         </th>
                         <th class="text-bold text-center">
+                            Category
+                        </th>
+                        <th class="text-bold text-center">
+                            Category Photo
+                        </th>
+                        <th class="text-bold text-center">
                             Photo
                         </th>
                         <th class="text-bold text-center">
@@ -120,7 +136,7 @@
 
 <script>
     loadTable();
-    function loadTable(Name, StartDate, EndDate, isButton) {
+    function loadTable(Name, StartDate, EndDate, CategoriesId) {
         $('#MenuTable').DataTable().clear();
         $('#MenuTable').DataTable().destroy();
         $('#MenuTable').DataTable(
@@ -134,12 +150,15 @@
                         Name: Name,
                         StartDate: StartDate,
                         EndDate: EndDate,
+                        CategoriesId: CategoriesId
                     }
                 },
                 'columns':
                     [
                         { "data": "hidden", "name": "0" },
                         { "data": "date", "name": "Date" },
+                        { "data": "categoryName", "name": "0" },
+                        { "data": "categoryPhoto", "name": "0" },
                         { "data": "photo", "name": "0" },
                         { "data": "link", "name": "Link" },
                         { "data": "preperations", "name": "0" },
@@ -176,41 +195,35 @@
                         {
                             "targets": 3,
                             'className': '',
-                            'sortable': false,
-                            'searchable':false,
                             "render": function (data, type, full, meta) {
-                                if (full.photo != null) {
-                                    return "<a href='../" + full.photo + "' target='_blank'><img alt='image' src='../" + full.photo + "' width = '75' /> </a>";
-                                }
-                                else {
+                                if (full.categoryName == null || full.categoryName == "") {
                                     return "<span class='text-danger'>----</span>";
                                 }
-
+                                else {
+                                    return full.categoryName;
+                                }
                             }
                         },
                         {
                             "targets": 4,
                             'className': '',
-                            'sortable': false,
-                            'searchable': false,
                             "render": function (data, type, full, meta) {
-                                if (full.link != null) {
-                                    return "<a href=" + full.link + " targe='_blank'>"+full.link+"</a>";
-                                }
-                                else {
+                                if (full.categoryPhoto == null || full.categoryPhoto == "") {
                                     return "<span class='text-danger'>----</span>";
                                 }
-
+                                else {
+                                    return "<a href='../" + full.categoryPhoto + "' target='_blank'><img alt='image' src='../" + full.categoryPhoto + "' width = '75' /> </a>";
+                                }
                             }
                         },
                         {
                             "targets": 5,
                             'className': '',
                             'sortable': false,
-                            'searchable': false,
+                            'searchable':false,
                             "render": function (data, type, full, meta) {
-                                if (full.link != null) {
-                                    return full.preperations;
+                                if (full.photo != null) {
+                                    return "<a href='../" + full.photo + "' target='_blank'><img alt='image' src='../" + full.photo + "' width = '75' /> </a>";
                                 }
                                 else {
                                     return "<span class='text-danger'>----</span>";
@@ -225,7 +238,7 @@
                             'searchable': false,
                             "render": function (data, type, full, meta) {
                                 if (full.link != null) {
-                                    return full.products;
+                                    return "<a href=" + full.link + " targe='_blank'>"+full.link+"</a>";
                                 }
                                 else {
                                     return "<span class='text-danger'>----</span>";
@@ -240,7 +253,7 @@
                             'searchable': false,
                             "render": function (data, type, full, meta) {
                                 if (full.link != null) {
-                                    return full.ingredients;
+                                    return full.preperations;
                                 }
                                 else {
                                     return "<span class='text-danger'>----</span>";
@@ -250,6 +263,36 @@
                         },
                         {
                             "targets": 8,
+                            'className': '',
+                            'sortable': false,
+                            'searchable': false,
+                            "render": function (data, type, full, meta) {
+                                if (full.link != null) {
+                                    return full.products;
+                                }
+                                else {
+                                    return "<span class='text-danger'>----</span>";
+                                }
+
+                            }
+                        },
+                        {
+                            "targets": 9,
+                            'className': '',
+                            'sortable': false,
+                            'searchable': false,
+                            "render": function (data, type, full, meta) {
+                                if (full.link != null) {
+                                    return full.ingredients;
+                                }
+                                else {
+                                    return "<span class='text-danger'>----</span>";
+                                }
+
+                            }
+                        },
+                        {
+                            "targets": 10,
                             'className': '',
                             "render": function (data, type, full, meta) {
                                 if (full.cooking != null) {
@@ -262,7 +305,7 @@
                             }
                         },
                         {
-                            "targets": 9,
+                            "targets": 11,
                             'className': '',
                             "render": function (data, type, full, meta) {
                                 if (full.weight != null) {
@@ -275,7 +318,7 @@
                             }
                         },
                         {
-                            "targets": 10,
+                            "targets": 12,
                             'className': '',
                             "render": function (data, type, full, meta) {
                                 if (full.createdBy != null) {
@@ -288,7 +331,7 @@
                             }
                         },
                         {
-                            "targets": 11,
+                            "targets": 13,
                             'className': '',
                             'sortable': false,
                             "render": function (data, type, full, meta) {
@@ -325,13 +368,15 @@
         var name = $('#searchName').val();
         var startDate = $('#searchStartDate').val();
         var endDate = $('#searchEndDate').val();
-        loadTable(name, startDate, endDate);
+        var categoriesId = $('#categoriesDropdown').val();
+        loadTable(name, startDate, endDate, categoriesId);
     }
 
     function clearSearch() {
         $('#searchName').val("");
         $('#searchStartDate').val("");
         $('#searchEndDate').val("");
+        $('#categoriesDropdown').val("").change();
         loadTable();
     }
 
@@ -340,10 +385,11 @@
         var name = $('#searchName').val();
         var startDate = $('#searchStartDate').val();
         var endDate = $('#searchEndDate').val();
-        downloadCSV(name, startDate, endDate);
+        var categoriesId = $('#categoriesDropdown').val();
+        downloadCSV(name, startDate, endDate, categoriesId);
     }
 
-    function downloadCSV(Name, StartDate, EndDate) {
+    function downloadCSV(Name, StartDate, EndDate, CategoriesId) {
         $.ajax({
             type: 'POST',
             url: "../Menu/GenerateCSV",
@@ -351,6 +397,7 @@
                 Name: Name,
                 StartDate: StartDate,
                 EndDate: EndDate,
+                CategoriesId: CategoriesId
             },
             success: function (response) {
                 // Assuming the server responds with a Blob containing the CSV file
@@ -393,5 +440,29 @@
         $("#confirmModalForm").attr("action", "../Menu/DeleteMenu?id=" + id);
 
         $('#confirmModal').modal('show');
+    }
+
+    getCategoriesList()
+    function getCategoriesList() {
+        $.ajax({
+            type: 'POST',
+            url: "../Category/GetMenuCategoryList",
+            dataType: "json",
+            success: function (response) {
+                var appendDropdown = "<option value=''>Select Option</option>";
+                for (var item = 0; item < response.length; item++) {
+                    appendDropdown += '<option value="' + response[item].id + '">' + response[item].name + '</option>';
+
+                }
+                $("#categoriesDropdown").append(appendDropdown);
+            },
+            error: function (error) {
+                console.log("Categories", error);
+            },
+            complete: function () {
+                $("#categoriesLoader").css("display", "none");
+                getIngredientsList();
+            }
+        });
     }
 </script>

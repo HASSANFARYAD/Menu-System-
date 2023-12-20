@@ -126,6 +126,7 @@ namespace HealthGuage.HelpingClasses
             var userDir = Path.Combine(rootDir, "users");
             var uIdDir = Path.Combine(userDir, "user" + Id);
             var menusDir = Path.Combine(uIdDir, "menus");
+            var categoryDir = Path.Combine(uIdDir, "category");
 
             if (!Directory.Exists(userDir))
                 Directory.CreateDirectory(userDir);
@@ -135,6 +136,9 @@ namespace HealthGuage.HelpingClasses
 
             if (!Directory.Exists(menusDir))
                 Directory.CreateDirectory(menusDir);
+
+            if (!Directory.Exists(categoryDir))
+                Directory.CreateDirectory(categoryDir);
         }
 
         private static async Task<bool> DeleteFile(string oldProfile, string fileDir)

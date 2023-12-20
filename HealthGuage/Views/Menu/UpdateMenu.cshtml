@@ -24,6 +24,13 @@
                                 <input type="text" class="form-control bg-lightgrey" value="@ViewBag.Menu.Name" id="menuName" required name="Name" placeholder="">
                             </div>
 
+                            <div class="form-group">
+                                <label class="text-bold">Category <span class="text-danger">*</span><i class="icon-spinner" id="categoriesLoader" style="display:none"></i></label>
+                                <div class="multi-select-full bg-lightgrey border-bottom-grey">
+                                    <select class="select" id="categoriesDropdown" name="CategoryId" required>
+                                    </select>
+                                </div>
+                            </div>
 
                             <div class="form-group">
                                 <label class="text-bold">Date <span class="text-danger">*</span></label>
@@ -38,7 +45,7 @@
                             <div class="form-group">
                                 <label class="text-bold">Menu Ingredients <i class="icon-spinner" id="ingredientsLoader" style="display:none"></i></label>
                                 <div class="multi-select-full bg-lightgrey border-bottom-grey">
-                                    <select multiple="multiple" class="select" id="ingredientsDropdown" name="Ingredients">
+                                    <select multiple="multiple" class="select" id="ingredientsDropdown" required name="Ingredients">
                                     </select>
                                 </div>
                             </div>
@@ -46,7 +53,7 @@
                             <div class="form-group">
                                 <label class="text-bold">Menu Products <i class="icon-spinner" id="productsLoader" style="display:none"></i></label>
                                 <div class="multi-select-full bg-lightgrey border-bottom-grey">
-                                    <select multiple="multiple" class="select" id="productsDropdown" name="Products">
+                                    <select multiple="multiple" class="select" id="productsDropdown" required name="Products">
                                     </select>
                                 </div>
                             </div>
@@ -54,7 +61,7 @@
                             <div class="form-group">
                                 <label class="text-bold">Menu Preperations <i class="icon-spinner" id="preperationsLoader" style="display:none"></i></label>
                                 <div class="multi-select-full bg-lightgrey border-bottom-grey">
-                                    <select multiple="multiple" class="select" id="preperationsDropdown" name="Preperations">
+                                    <select multiple="multiple" class="select" id="preperationsDropdown" required name="Preperations">
                                     </select>
                                 </div>
                             </div>
@@ -100,20 +107,63 @@
 
 @section Scripts{
     <script>
+        var categoryId = '@ViewBag.Menu.CategoryId';
+
         var getIngredients = '@ViewBag.ingredients';
         var ingredientsArray = getIngredients.split(',');
+
+        for (var i = 0; i < ingredientsArray.length; i++) {
+            ingredientsArray[i] = ingredientsArray[i].replace(/&#x2B;/g, '+');
+        }
 
         var getProducts = '@ViewBag.products';
         var productsArray = getProducts.split(',');
 
+        for (var i = 0; i < productsArray.length; i++) {
+            productsArray[i] = productsArray[i].replace(/&#x2B;/g, '+');
+        }
+
         var getPreparations = '@ViewBag.preparations';
         var preparationsArray = getPreparations.split(',');
 
-        getIngredientsList();
-        function getIngredientsList() {
+        for (var i = 0; i < preparationsArray.length; i++) {
+            preparationsArray[i] = preparationsArray[i].replace(/&#x2B;/g, '+');
+        }
+
+        getCategoriesList();
+        function getCategoriesList() {
+            $("#categoriesLoader").css("display", "inline-block");
             $("#ingredientsLoader").css("display", "inline-block");
             $("#productsLoader").css("display", "inline-block");
             $("#preperationsLoader").css("display", "inline-block");
+            $.ajax({
+                type: 'POST',
+                url: "../Category/GetMenuCategoryList",
+                dataType: "json",
+                success: function (response) {
+                    var appendDropdown = "";
+                    for (var item = 0; item < response.length; item++) {
+                        if (response[item].id == categoryId) {
+                            appendDropdown += '<option value="' + response[item].encId + '" selected>' + response[item].name + '</option>';
+                        }
+                        else{
+                            appendDropdown += '<option value="' + response[item].encId + '">' + response[item].name + '</option>';
+                        }
+
+                    }
+                    $("#categoriesDropdown").append(appendDropdown);
+                },
+                error: function (error) {
+                    console.log("Categories", error);
+                },
+                complete: function () {
+                    $("#categoriesLoader").css("display", "none");
+                    getIngredientsList();
+                }
+            });
+        }
+
+        function getIngredientsList() {
             $.ajax({
                 type: 'POST',
                 url: "../Ingredient/GetIngredientList",

@@ -296,11 +296,11 @@ namespace Template.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2023, 11, 29, 15, 20, 41, 66, DateTimeKind.Local).AddTicks(9030),
+                            CreatedAt = new DateTime(2023, 12, 20, 4, 0, 32, 217, DateTimeKind.Local).AddTicks(7973),
                             Email = "uzair.aslam02@gmail.com",
                             IsActive = 1,
                             Name = "Uzair Aslam",
-                            Password = "p9mP0tjhY+V0cnRdvwwCHT7QsbTkSPtbzfQE6JT1aoI=",
+                            Password = "m/EdHyrUpJ0zwDm3oFZoblpeX9ye1+39BYknM3Wd8Cw=",
                             PhoneNumber = "0000-0000000",
                             Role = 1
                         });
@@ -393,6 +393,40 @@ namespace Template.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Ingredient");
+                });
+
+            modelBuilder.Entity("Template.Models.MenuCategory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("CreatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("FilePath")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("IsActive")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("MenuCategory");
                 });
 
             modelBuilder.Entity("HealthGuage.Models.MenuIngredient", b =>

@@ -27,6 +27,15 @@ namespace HealthGuage.Models
         public string? CreatedBy { get; set; }
     }
 
+    public class MenuCategoryDto
+    {
+        public string? Id { get; set; }
+        public string? EncId { get; set; }
+        public string? Name { get; set; }
+        public string? ProfilePath { get; set; }
+        public string? CreatedBy { get; set; }
+    }
+
     public class ProductDto
     {
         public string? Id { get; set; }
@@ -58,6 +67,9 @@ namespace HealthGuage.Models
         public string? Products { get; set; }
         public string? Preperations { get; set; }
         public string? CreatedBy { get; set; }
+        public string? CategoryName { get; set; }
+        public string? CategoryId { get; set; }
+        public string? CategoryPhoto { get; set; }
     }
 
     public class AddMenuDto
@@ -74,5 +86,14 @@ namespace HealthGuage.Models
         public string[]? Products { get; set; }
         public string[]? Preperations { get; set; }
         public IFormFile? Picture { get; set; }
+        public string? CategoryId { get; set; }
+    }
+
+    public class AddMenuCategoryDto
+    {
+        public int? Id { get; set;}
+        public string? Name { get; set; }
+        public string? Description { get; set; }
+        public IFormFile? Picture { get; set;}
     }
 }
