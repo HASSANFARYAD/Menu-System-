@@ -8,7 +8,7 @@ namespace Template.Repositories
     {
         Task<Menu?> GetMenuById(int id);
         Task<bool> IsMenuValidate(int id);
-        Task<int> GetActiveMenuCount(int id = -1);
+        Task<int> GetActiveMenuCount(int id = -1, int categoryId = -1);
         Task<IEnumerable<Menu>> GetActiveMenuList(int id = -1);
         Task<bool> AddMenu(Menu Menu);
         Task<bool> AddMenuWithoutSaving(Menu Menu);
@@ -33,11 +33,15 @@ namespace Template.Repositories
             return await context.Menu.FirstOrDefaultAsync(x => x.Id == id && x.IsActive == 1);
         }
 
-        public async Task<int> GetActiveMenuCount(int id = -1)
+        public async Task<int> GetActiveMenuCount(int id = -1, int categoryId = -1)
         {
             if (id != -1)
             {
                 return await context.Menu.CountAsync(x => x.IsActive == 1);
+            }
+            else if(categoryId != -1)
+            {
+                return await context.Menu.CountAsync(x => x.IsActive == 1 && x.CategoryId == categoryId);
             }
             else
             {

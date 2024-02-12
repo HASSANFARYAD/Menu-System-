@@ -153,8 +153,16 @@ namespace Template.Controllers
                 if (u.CategoryId != null)
                 {
                     var category = await _menuCategoryRepo.GetMenuCategoryById((int)u.CategoryId);
-                    categoryName = category.Name;
-                    categoryPhoto = category.FilePath;
+                    if (category != null)
+                    {
+                        categoryName = category.Name;
+                        categoryPhoto = category.FilePath;
+                    }
+                    else
+                    {
+                        categoryName = "Deleted";
+                        categoryPhoto = "";
+                    }
                 }
 
                 List<string> ingredientsArray = new List<string>();
@@ -634,15 +642,33 @@ namespace Template.Controllers
                 var getUserId = gp.GetUserClaims();
 
                 var ingredients = await _menuIngredientRepo.GetActiveMenuIngredientListByMenuId(menuId);
-                var list = ingredients.Select(x => StringCipher.EncryptId((int)x.IngredientId)).ToList();
+                var list = ingredients.ToList();
+                foreach (var item in list)
+                {
+                    if (!await _menuIngredientRepo.DeleteMenuIngredient(item.Id))
+                    {
+                        return false;
+                    }
+                }
+
                 var getIngre = ingredientsId.ToList();
-                List<string> list2 = new List<string>();
 
-                var inList1NotInList2 = list.Except(list2);
-                var inList2NotInList1 = list2.Except(list);
+                foreach (var ingredient in getIngre)
+                {
+                    MenuIngredient menuIngredient = new MenuIngredient()
+                    {
+                        MenuId = menuId,
+                        IngredientId = StringCipher.DecryptId(ingredient),
+                        IsActive = 1,
+                        CreatedBy = Convert.ToInt32(getUserId.Id),
+                        CreatedAt = GeneralPurpose.DateTimeNow()
+                    };
 
-                var abc = "";
-                
+                    if (!await _menuIngredientRepo.AddMenuIngredient(menuIngredient))
+                    {
+                        return false;
+                    }
+                }
 
                 return true;
             }

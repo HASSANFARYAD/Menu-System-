@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Template")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2cdd8da61f25e0ff3b141ff67af4ef06e18e04ca")]
 [assembly: System.Reflection.AssemblyProductAttribute("Template")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Template")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

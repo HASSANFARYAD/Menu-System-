@@ -258,7 +258,11 @@ namespace Template.Controllers
         public async Task<IActionResult> DeleteMenuCategory(string id)
         {
             int Id = StringCipher.DecryptId(id);
-
+            var getList = await _menuRepo.GetActiveMenuCount(-1, (int)Id);
+            if (getList > 0)
+            {
+                return RedirectToAction("Index", new { msg = "This category already has " + getList + " menus allocated to it. Please first delete them.", color = "red" });
+            }
             if (!await _menuCategoryRepo.DeleteMenuCategory(Id))
             {
                 return RedirectToAction("Index", new { msg = "Somethings' wrong", color = "red" });
