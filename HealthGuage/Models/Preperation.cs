@@ -6,6 +6,7 @@ namespace HealthGuage.Models
     {
         public string? Name { get; set; }
         public List<MenuPreperation?> MenuPreperations { get; set; }
+        public string? Notes { get; set; }
 
     }
 }

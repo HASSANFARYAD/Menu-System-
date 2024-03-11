@@ -1,6 +1,124 @@
 ﻿@{
     ViewBag.Title = "View Menu";
+
 }
+
+<!-- The Modal -->
+<div class="modal" id="myModal">
+    <div class="modal-dialog">
+        <div class="modal-content" >
+            <div class="modal-header" style="background-color: whitesmoke;">
+                <h4 class="modal-title text-center">Export Menus</h4>
+                <button type="button" class="close" style="color:red;" data-dismiss="modal">&times;</button>
+                
+            </div>
+                <div class="modal-body">
+                    
+                    <div class="col-md-12 col-lg-12" style="background-color: white;">
+                    <div class="form-group">
+                        <label class="text-bold">Menu<i class="icon-spinner" id="" style="display:none"></i></label>
+                        <div class="multi-select-full bg-lightgrey border-bottom-grey">
+                            <select class="select" id="menuDropdown" >
+                            </select>
+                        </div>
+                      
+                    </div>
+                </div>
+                    <div class="col-md-4 col-lg-4">
+                        <div class="form-group">
+                            <input type="checkbox" id="nameCheckbox" required />
+                            <label><strong>Name</strong></label>
+                        </div>
+                    </div>
+              
+                    <div class="col-md-4 col-lg-4">
+                    <div class="form-group">
+                        <input type="checkbox" id="dateCheckbox" />
+                        <label><strong>Date</strong></label>
+                    </div>
+                </div>
+                    <div class="col-md-4 col-lg-4">
+                    <div class="form-group">
+                        <input type="checkbox" id="categoryCheckbox" />
+                        <label><strong>Category</strong></label>
+                    </div>
+                </div>
+                    <div class="col-md-4 col-lg-4">
+                    <div class="form-group">
+                        <input type="checkbox" id="categoryPhotoCheckbox" />
+                        <label><strong>CategoryPhoto</strong></label>
+                    </div>
+                </div>
+                    <div class="col-md-4 col-lg-4">
+                    <div class="form-group">
+                        <input type="checkbox" id="photoCheckbox" />
+                        <label><strong>Photo</strong></label>
+                    </div>
+                </div>
+                    <div class="col-md-4 col-lg-4">
+                    <div class="form-group">
+                        <input type="checkbox" id="linkCheckbox" />
+                        <label><strong>Link</strong></label>
+                    </div>
+                </div>
+                    <div class="col-md-4 col-lg-4">
+                         <div class="form-group">
+                            <input type="checkbox" id="preperationCheckbox" />
+                            <label><strong>Preperation</strong></label>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-lg-4">
+                    <div class="form-group">
+                        <input type="checkbox" id="productsCheckbox" />
+                        <label><strong>Products</strong></label>
+                    </div>
+                </div>
+                    <div class="col-md-4 col-lg-4">
+                        <div class="form-group">
+                            <input type="checkbox" id="ingredientsCheckbox" />
+                            <label><strong>Ingredients</strong></label>
+                        </div>
+                     </div>
+                    <div class="col-md-4 col-lg-4">
+                    <div class="form-group">
+                        <input type="checkbox" id="cookingCheckbox" />
+                        <label><strong>Cooking</strong></label>
+                    </div>
+                </div>
+               
+                    <div class="col-md-4 col-lg-4">
+                    <div class="form-group">
+                        <input type="checkbox" id="weightCheckbox" />
+                        <label><strong>Weight</strong></label>
+                    </div>
+                </div>
+              
+                    <div class="col-md-4 col-lg-4">
+                    <div class="form-group">
+                        <input type="checkbox" id="beaCheckbox" />
+                        <label><strong>Bea Or Staff</strong></label>
+                    </div>
+                </div>
+                    <div class="col-md-4 col-lg-4">
+                    <div class="form-group">
+                        <input type="checkbox" id="notesCheckbox" />
+                        <label><strong>Notes</strong></label>
+                    </div>
+                </div>
+                </div>
+               <br />
+                     <div id="checkboxError" style="color: red; display: none;text-align:center;">Please select at least one option.</div>
+                    <div class="modal-footer" style="display:inline-block;">
+                
+                <button type="button" onclick="exportTableLETICIA()" id="exBtn" class="btn btn-primary">LETICIA</button>
+                <button type="button" onclick="exportTableAMP()" id="exBtn" class="btn btn-primary">AMP PRODUCTION</button>
+                <button type="button" onclick="exportTable()" id="exBtn" class="btn btn-primary">FALL WINTER PRODUCTION</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+     </div>
+</div>
+
 
 
     <div class="col-md-12 ">
@@ -55,12 +173,13 @@
                         </div>
                     </div>
                     <div class="col-md-3 col-sm-12 col-xs-12"></div>
-
-                    <div class="col-md-3 col-sm-12 col-xs-12" style="padding-left: 20px; padding-right: 20px; ">
-                        <div class="form-group text-right">
-                            <button onclick="exportTable()" id="exportBtn" class="btn btn-secondary btn-block">Export</button><br />
+                   
+                        <div class="col-md-3 col-sm-12 col-xs-12" style="padding-left: 20px; padding-right: 20px;">
+                            <div class="form-group text-right">
+                                <button onclick="openModal()"  class="btn btn-secondary btn-block">Export</button><br />
+                            </div>
                         </div>
-                    </div>
+
                     <div class="col-md-3 col-sm-12 col-xs-12" style="padding-left: 20px; padding-right: 20px; ">
                         <div class="form-group text-right">
                             <button onclick="searchTable()" class="btn btn-success btn-block">Search</button><br />
@@ -92,6 +211,7 @@
                         <th class="text-bold text-center">
                             Name
                         </th>
+                   
                         <th class="text-bold text-center">
                             Date
                         </th>
@@ -122,6 +242,9 @@
                         <th class="text-bold text-center">
                             Weight
                         </th>
+                    <th class="text-bold text-center">
+                        Notes
+                    </th>
                         <th class="text-bold text-center">
                             Created By
                         </th>
@@ -134,9 +257,16 @@
         </div>
     </div>
 
+<input type="hidden" id="MenuTypeId" value="@ViewBag.MenuTypeId"/>
+@{
+    string menuTypeId = ViewBag.MenuTypeId;
+}
+
 <script>
+    var MenuTypeId = $('#MenuTypeId').val();
     loadTable();
     function loadTable(Name, StartDate, EndDate, CategoriesId) {
+       
         $('#MenuTable').DataTable().clear();
         $('#MenuTable').DataTable().destroy();
         $('#MenuTable').DataTable(
@@ -150,7 +280,8 @@
                         Name: Name,
                         StartDate: StartDate,
                         EndDate: EndDate,
-                        CategoriesId: CategoriesId
+                        CategoriesId: CategoriesId,
+                        MenuTypeId: '@menuTypeId'
                     }
                 },
                 'columns':
@@ -166,6 +297,7 @@
                         { "data": "ingredients", "name": "0" },
                         { "data": "cooking", "name": "Cooking" },
                         { "data": "weight", "name": "Weight" },
+                        { "data": "Notes", "notes": "Notes" },
                         { "data": "createdBy", "name": "CreatedBy" },
                     ],
                 'columnDefs':
@@ -321,6 +453,19 @@
                             "targets": 12,
                             'className': '',
                             "render": function (data, type, full, meta) {
+                                if (full.notes != null) {
+                                    return full.notes;
+                                }
+                                else {
+                                    return "<span class='text-danger'>----</span>";
+                                }
+
+                            }
+                        },
+                        {
+                            "targets": 13,
+                            'className': '',
+                            "render": function (data, type, full, meta) {
                                 if (full.createdBy != null) {
                                     return full.createdBy;
                                 }
@@ -331,7 +476,7 @@
                             }
                         },
                         {
-                            "targets": 13,
+                            "targets": 14,
                             'className': '',
                             'sortable': false,
                             "render": function (data, type, full, meta) {
@@ -381,15 +526,51 @@
     }
 
     function exportTable() {
-        $("#exportBtn").attr("disabled", true);
+        
         var name = $('#searchName').val();
         var startDate = $('#searchStartDate').val();
         var endDate = $('#searchEndDate').val();
         var categoriesId = $('#categoriesDropdown').val();
-        downloadCSV(name, startDate, endDate, categoriesId);
+
+        var nameCheckbox = $('#nameCheckbox').prop('checked');
+        var categoryCheckbox = $('#categoryCheckbox').prop('checked');
+        var dateCheckbox = $('#dateCheckbox').prop('checked');
+        var weightCheckbox = $('#weightCheckbox').prop('checked');
+        var notesCheckbox = $('#notesCheckbox').prop('checked');
+        var beaCheckbox = $('#beaCheckbox').prop('checked');
+        var cookingCheckbox = $('#cookingCheckbox').prop('checked');
+        var categoryPhotoCheckbox = $('#categoryPhotoCheckbox').prop('checked');
+        var photoCheckbox = $('#photoCheckbox').prop('checked');
+        var linkCheckbox = $('#linkCheckbox').prop('checked');
+        var preperationCheckbox = $('#preperationCheckbox').prop('checked');
+        var productsCheckbox = $('#productsCheckbox').prop('checked');
+        var ingredientsCheckbox = $('#ingredientsCheckbox').prop('checked');
+
+        if (!(nameCheckbox || categoryCheckbox || dateCheckbox || weightCheckbox || notesCheckbox || beaCheckbox || cookingCheckbox ||
+            categoryPhotoCheckbox || photoCheckbox || linkCheckbox || preperationCheckbox || productsCheckbox || ingredientsCheckbox)) {
+            $('#checkboxError').show();
+            return;
+        } else {
+            $('#checkboxError').hide();
+        }
+        var selectedMenuId = $('#menuDropdown').val();
+
+        downloadCSV(MenuTypeId, name, startDate, endDate, categoriesId,
+
+            nameCheckbox, categoryCheckbox, dateCheckbox,
+            weightCheckbox, notesCheckbox, beaCheckbox, cookingCheckbox, categoryPhotoCheckbox,
+            photoCheckbox, linkCheckbox, preperationCheckbox,
+            productsCheckbox, ingredientsCheckbox, selectedMenuId);
+
+        $('#myModal').modal('hide');
     }
 
-    function downloadCSV(Name, StartDate, EndDate, CategoriesId) {
+    function downloadCSV(MenuTypeId, Name, StartDate, EndDate, CategoriesId,
+
+        nameCheckbox, categoryCheckbox, dateCheckbox,
+        weightCheckbox, notesCheckbox,beaCheckbox, cookingCheckbox, categoryPhotoCheckbox,
+        photoCheckbox, linkCheckbox, preperationCheckbox,
+        productsCheckbox, ingredientsCheckbox, selectedMenuId) {
         $.ajax({
             type: 'POST',
             url: "../Menu/GenerateCSV",
@@ -397,25 +578,172 @@
                 Name: Name,
                 StartDate: StartDate,
                 EndDate: EndDate,
-                CategoriesId: CategoriesId
+                CategoriesId: CategoriesId,
+                MenuTypeId: MenuTypeId,
+                 
+
+                nameCheckbox: nameCheckbox,
+                categoryCheckbox: categoryCheckbox,
+                dateCheckbox: dateCheckbox,
+                weightCheckbox: weightCheckbox,
+                notesCheckbox: notesCheckbox,
+                beaCheckbox:beaCheckbox,
+                cookingCheckbox: cookingCheckbox,
+                categoryPhotoCheckbox: categoryPhotoCheckbox,
+                photoCheckbox: photoCheckbox,
+                linkCheckbox: linkCheckbox,
+                preperationCheckbox: preperationCheckbox,
+                productsCheckbox: productsCheckbox,
+                ingredientsCheckbox: ingredientsCheckbox,
+                selectedMenuId: selectedMenuId
+                
+
             },
             success: function (response) {
-                // Assuming the server responds with a Blob containing the CSV file
                 var blob = new Blob([response], { type: 'text/csv' });
 
-                // Check for the MS Internet Explorer and Edge browsers
                 if (window.navigator.msSaveOrOpenBlob) {
-                    window.navigator.msSaveBlob(blob, 'Heather Stock - Menu.csv');
+                    window.navigator.msSaveBlob(blob, 'Heather Stock - FALL_WINTER.csv');
                 } else {
-                    // Create a link element and trigger the download
                     var link = document.createElement('a');
                     link.href = window.URL.createObjectURL(blob);
-                    link.download = 'Heather Stock - Menu.csv';
+                    link.download = 'Heather Stock - FALL_WINTER.csv';
 
                     document.body.appendChild(link);
                     link.click();
+                    document.body.removeChild(link);
+                }
+            },
+            error: function (error) {
+                console.log("Menu", error);
+            },
+            complete: function () {
+                $("#exportBtn").attr("disabled", false);
+            }
+        });
+    }
 
-                    // Clean up
+    function exportTableAMP() {
+
+        var nameCheckbox = $('#nameCheckbox').prop('checked');
+        var preperationCheckbox = $('#preperationCheckbox').prop('checked');
+       
+
+        if (!(nameCheckbox || preperationCheckbox  )) {
+            $('#checkboxError').show();
+            return;
+        } else {
+            $('#checkboxError').hide();
+        }
+        var selectedMenuId = $('#menuDropdown').val();
+
+        downloadCSVAMP(MenuTypeId,
+
+            nameCheckbox,  preperationCheckbox,
+             selectedMenuId);
+
+        $('#myModal').modal('hide');
+    }
+
+    function downloadCSVAMP(MenuTypeId,
+
+        nameCheckbox, preperationCheckbox,
+        selectedMenuId) {
+        $.ajax({
+            type: 'POST',
+            url: "../Menu/GenerateCSVAMP",
+            data: {
+                
+
+                nameCheckbox: nameCheckbox,
+                preperationCheckbox: preperationCheckbox,
+                selectedMenuId: selectedMenuId,
+                    MenuTypeId:MenuTypeId
+
+            },
+            success: function (response) {
+                var blob = new Blob([response], { type: 'text/csv' });
+
+                if (window.navigator.msSaveOrOpenBlob) {
+                    window.navigator.msSaveBlob(blob, 'Heather Stock - AMP Menu.csv');
+                } else {
+                    var link = document.createElement('a');
+                    link.href = window.URL.createObjectURL(blob);
+                    link.download = 'Heather Stock - AMP_Menu.csv';
+
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                }
+            },
+            error: function (error) {
+                console.log("Menu", error);
+            },
+            complete: function () {
+                $("#exportBtn").attr("disabled", false);
+            }
+        });
+    }
+
+    function exportTableLETICIA() {
+
+        
+
+        var nameCheckbox = $('#nameCheckbox').prop('checked');
+        var dateCheckbox = $('#dateCheckbox').prop('checked');
+        var preperationCheckbox = $('#preperationCheckbox').prop('checked');
+
+        if (!(nameCheckbox ||  dateCheckbox 
+            || preperationCheckbox || productsCheckbox )) {
+            $('#checkboxError').show();
+            return;
+        } else {
+            $('#checkboxError').hide();
+        }
+        var selectedMenuId = $('#menuDropdown').val();
+
+        downloadCSVLETICIA(
+            MenuTypeId,
+            nameCheckbox, dateCheckbox,
+            
+             preperationCheckbox,
+             selectedMenuId);
+
+        $('#myModal').modal('hide');
+    }
+
+    function downloadCSVLETICIA(MenuTypeId,
+
+        nameCheckbox, dateCheckbox,
+        preperationCheckbox,
+        selectedMenuId) {
+        $.ajax({
+            type: 'POST',
+            url: "../Menu/GenerateCSVLETICIA",
+            data: {
+                
+
+                nameCheckbox: nameCheckbox,
+               
+                dateCheckbox: dateCheckbox,
+               
+                preperationCheckbox: preperationCheckbox,
+                selectedMenuId: selectedMenuId,
+                MenuTypeId: MenuTypeId,
+
+            },
+            success: function (response) {
+                var blob = new Blob([response], { type: 'text/csv' });
+
+                if (window.navigator.msSaveOrOpenBlob) {
+                    window.navigator.msSaveBlob(blob, 'Heather Stock -LETICIA_Menu.csv');
+                } else {
+                    var link = document.createElement('a');
+                    link.href = window.URL.createObjectURL(blob);
+                    link.download = 'Heather Stock -LETICIA_Menu.csv';
+
+                    document.body.appendChild(link);
+                    link.click();
                     document.body.removeChild(link);
                 }
             },
@@ -464,5 +792,44 @@
                 getIngredientsList();
             }
         });
+    }
+    
+    function openModal() {
+        var dropdown = $('#myModal').find('.select');
+
+        dropdown.empty();
+
+        $.ajax({
+            type: 'POST',
+            url: "/Menu/GetMenuDropdownList",
+            data: { MenuTypeId: MenuTypeId },
+            dataType: "json",
+            success: function (response) {
+                var appendDropdown = "<option value=''>Select Option</option>";
+                for (var item = 0; item < response.length; item++) {
+                    appendDropdown += '<option value="' + response[item].id + '">' + response[item].name + '</option>';
+                }
+                $("#menuDropdown").append(appendDropdown);
+
+                
+                $("#menuDropdown").change(function () {
+                    var selectedMenuTypeId = $(this).val();
+                    if (selectedMenuTypeId) {
+                        
+                        var selectedOption = response.find(menu => menu.id == selectedMenuTypeId);
+                        $("#menuDropdown").empty().append('<option value="' + selectedOption.id + '">' + selectedOption.name + '</option>');
+                    } else {
+                        $("#menuDropdown").empty().append(appendDropdown);
+                    }
+                });
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+
+        $('#nameCheckbox, #dateCheckbox, #categoryCheckbox, #categoryPhotoCheckbox, #photoCheckbox, #linkCheckbox, #preparationCheckbox, #productsCheckbox, #ingredientsCheckbox, #cookingCheckbox, #weightCheckbox, #notesCheckbox, #beaCheckbox').prop('checked', true);
+
+        $('#myModal').modal('show');
     }
 </script>

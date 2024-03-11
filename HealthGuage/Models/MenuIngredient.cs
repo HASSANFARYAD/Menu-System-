@@ -12,6 +12,7 @@ namespace HealthGuage.Models
         [ForeignKey("Ingredient")]
         public int? IngredientId { get; set; }
         public Ingredient? Ingredient { get; set; }
+        public string? Notes { get; set; }
     }
 
 }

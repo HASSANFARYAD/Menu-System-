@@ -114,6 +114,7 @@ namespace Template.Controllers
                     Id = u.Id.ToString(),
                     EncId = StringCipher.EncryptId(u.Id),
                     Name = u.Name,
+                    Notes = u.Notes,
                     CreatedBy = userName,
                 };
 
@@ -134,6 +135,7 @@ namespace Template.Controllers
             Product Product = new Product
             {
                 Name = _Product.Name.Trim(),
+                Notes = _Product.Notes.Trim(),
                 IsActive = 1,
                 CreatedAt = GeneralPurpose.DateTimeNow(),
                 CreatedBy = Convert.ToInt32(getUserId.Id)
@@ -195,6 +197,7 @@ namespace Template.Controllers
                 return RedirectToAction("Index", new { msg = "Record not found", color = "red" });
             }
             Product.Name = _Product.Name.Trim();
+            Product.Notes = _Product.Notes.Trim();
             Product.UpdatedAt = GeneralPurpose.DateTimeNow();
 
             if (await _productRepo.UpdateProduct(Product))
@@ -219,6 +222,7 @@ namespace Template.Controllers
                 Id = u.Id.ToString(),
                 EncId = StringCipher.EncryptId(u.Id),
                 Name = u.Name,
+                Notes = u.Notes,
             };
 
             return Json(obj);
@@ -248,6 +252,7 @@ namespace Template.Controllers
                     Id = u.Id.ToString(),
                     EncId = StringCipher.EncryptId(u.Id),
                     Name = u.Name,
+                    Notes = u.Notes,
                 };
 
                 udto.Add(obj);

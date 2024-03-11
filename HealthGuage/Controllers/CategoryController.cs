@@ -111,6 +111,7 @@ namespace Template.Controllers
                     Id = u.Id.ToString(),
                     EncId = StringCipher.EncryptId(u.Id),
                     Name = u.Name,
+                    Notes = u.Notes,
                     ProfilePath = u.FilePath,
                     CreatedBy = userName,
                 };
@@ -132,6 +133,7 @@ namespace Template.Controllers
             MenuCategory menuCategory = new MenuCategory
             {
                 Name = _category.Name.Trim(),
+                Notes = _category.Notes.Trim(),
                 IsActive = 1,
                 CreatedAt = GeneralPurpose.DateTimeNow(),
                 CreatedBy = Convert.ToInt32(getUserId.Id)
@@ -173,6 +175,7 @@ namespace Template.Controllers
                 return RedirectToAction("Index", new { msg = "Record not found", color = "red" });
             }
             menuCategory.Name = _category.Name.Trim();
+            menuCategory.Notes = _category.Notes.Trim();
             menuCategory.UpdatedAt = GeneralPurpose.DateTimeNow();
 
             if (_category.Picture != null)
@@ -217,6 +220,7 @@ namespace Template.Controllers
             {
                 Id = u.Id.ToString(),
                 Name = u.Name,
+                Notes = u.Notes,
                 ProfilePath = u.FilePath,
             };
 
@@ -226,9 +230,9 @@ namespace Template.Controllers
         [HttpPost]
         public async Task<IActionResult> GetMenuCategoryList()
         {
-            var getUserId = gp.GetUserClaims();
+            UserDto? getUserId = gp.GetUserClaims();
 
-            var list = new List<MenuCategory>();
+            List<MenuCategory>? list = new List<MenuCategory>();
             if (getUserId.Role == 1)
             {
                 list = (List<MenuCategory>)await _menuCategoryRepo.GetActiveMenuCategoryList();
@@ -247,6 +251,7 @@ namespace Template.Controllers
                     Id = u.Id.ToString(),
                     EncId = StringCipher.EncryptId(u.Id),
                     Name = u.Name,
+                    Notes = u.Notes,
                 };
 
                 udto.Add(obj);

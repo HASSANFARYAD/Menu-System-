@@ -1,5 +1,7 @@
 ﻿@using HealthGuage.Models
+
 @using HealthGuage.HelpingClasses
+@model List<MenuTypeDto>
 @inject GeneralPurpose gp
 @{
     UserDto loggedinUser = gp.GetUserClaims();
@@ -288,14 +290,25 @@
                                 <ul>
                                     <li id="manageCategoryTabView"><a href="@Url.Action("Index", "Category")">View Categories</a></li>
                                 </ul>
-                            </li> 
+                            </li>
+                            <li>
+                                <a href="#"><i class="icon-hour-glass"></i> <span>Manage MenuType</span></a>
+                                <ul>
+                                    <li id="managemenuTypeTabView"><a href="@Url.Action("Index", "MenuType")">View MenuType</a></li>
+                                </ul>
+                            </li>
                             <li>
                                 <a href="#"><i class="icon-menu2"></i> <span>Manage Menu</span></a>
                                 <ul>
                                     <li id="manageAddMenuTabView"><a href="@Url.Action("AddMenu", "Menu")">Add Menu</a></li>
-                                    <li id="manageMenuTabView"><a href="@Url.Action("Index", "Menu")">View Menu</a></li>
+                                    <li id="manageMenuTabView2"><a href="@Url.Action("Index", "Menu")">View Menu</a></li>
                                 </ul>
-                            </li> 
+                            </li>
+                            <li>
+                                <a href="#"><i class="icon-menu2"></i> <span>Manage Menu Categories</span></a>
+                                <ul id="menuTypeList">
+                                </ul>
+                            </li>
                         </ul>
                     </div>
 
@@ -310,8 +323,45 @@
             @RenderBody()
         </div>
     </div>
-
     <script>
+        getMenuTypeList();
+        function getMenuTypeList() {
+            $("#menuTypeLoader").css("display", "inline-block");
+            $.ajax({
+                type: 'POST',
+                url: "../MenuType/GetMenuTypeList",
+                dataType: "json",
+                success: function (response) {
+                    console.log("MenuType", response);
+                    var menuTypeList = $("#menuTypeList");
+
+                    menuTypeList.empty();
+
+                    for (var item = 0; item < response.length; item++) {
+                        var menuTypeId = response[item].encId;
+                        var menuTypeName = response[item].name;
+
+                        var listItemElement = $('<li><a href="/Menu/Index?MenuTypeId=' + menuTypeId + '">' + menuTypeName + '</a></li>');
+
+                        menuTypeList.append(listItemElement);
+
+                    }
+                },
+                error: function (error) {
+                    console.log("MenuType", error);
+                },
+                complete: function () {
+                    $("#menuTypeLoader").css("display", "none");
+                }
+            });
+        }
+
+        getMenuTypeList();
+
+       
+
+
+
 
         //show hide Passwords
         function ShowPasswords(id) {

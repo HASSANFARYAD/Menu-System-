@@ -53,7 +53,7 @@ namespace Template.Repositories
         {
             if (id == -1)
             {
-                var Menu = await context.Menu.Where(x => x.IsActive == 1).OrderByDescending(x => x.Id).ToListAsync();
+                var Menu = await context.Menu.Where(x => x.IsActive == 1 ).OrderByDescending(x => x.Id).ToListAsync();
                 return Menu;
             }
             else

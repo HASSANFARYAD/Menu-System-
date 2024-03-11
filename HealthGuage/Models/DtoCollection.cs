@@ -24,6 +24,7 @@ namespace HealthGuage.Models
         public string? Id { get; set; }
         public string? EncId { get; set; }
         public string? Name { get; set; }
+        public string? Notes { get; set; }
         public string? CreatedBy { get; set; }
     }
 
@@ -32,7 +33,16 @@ namespace HealthGuage.Models
         public string? Id { get; set; }
         public string? EncId { get; set; }
         public string? Name { get; set; }
+        public string? Notes { get; set; }
         public string? ProfilePath { get; set; }
+        public string? CreatedBy { get; set; }
+    }
+    public class MenuTypeDto
+    {
+        public string? Id { get; set; }
+        public string? EncId { get; set; }
+        public string? Name { get; set; }
+        public string? Description { get; set; }
         public string? CreatedBy { get; set; }
     }
 
@@ -41,6 +51,7 @@ namespace HealthGuage.Models
         public string? Id { get; set; }
         public string? EncId { get; set; }
         public string? Name { get; set; }
+        public string? Notes { get; set; }
         public string? CreatedBy { get; set; }
     }
 
@@ -49,6 +60,8 @@ namespace HealthGuage.Models
         public string? Id { get; set; }
         public string? EncId { get; set; }
         public string? Name { get; set; }
+        public string? Notes { get; set; }
+
         public string? CreatedBy { get; set; }
     }
 
@@ -70,6 +83,9 @@ namespace HealthGuage.Models
         public string? CategoryName { get; set; }
         public string? CategoryId { get; set; }
         public string? CategoryPhoto { get; set; }
+        public string? Qunantity { get; set; }
+        public string? Notes { get; set; }
+
     }
 
     public class AddMenuDto
@@ -87,7 +103,12 @@ namespace HealthGuage.Models
         public string[]? Preperations { get; set; }
         public IFormFile? Picture { get; set; }
         public string? CategoryId { get; set; }
+        public string? Description {  get; set; }
+        public string? MenuTypeId {  get; set; }
+        public string? Notes { get; set; }
+
     }
+
 
     public class AddMenuCategoryDto
     {
@@ -95,5 +116,14 @@ namespace HealthGuage.Models
         public string? Name { get; set; }
         public string? Description { get; set; }
         public IFormFile? Picture { get; set;}
+        public string? Notes { get; set; }
+
+    }
+
+    public class AddMenuTypeDto
+    {
+        public int? Id { get; set; }
+        public string? Name { get; set; }
+        public string? Description { get; set; }
     }
 }

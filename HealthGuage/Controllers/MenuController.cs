@@ -1,16 +1,20 @@
 ﻿using CsvHelper;
 using CsvHelper.Configuration;
+using DocumentFormat.OpenXml.ExtendedProperties;
 using DocumentFormat.OpenXml.Spreadsheet;
+using DocumentFormat.OpenXml.Wordprocessing;
 using HealthGuage.HelpingClasses;
 using HealthGuage.Models;
 using HealthGuage.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Query.Internal;
 using Newtonsoft.Json;
 using System.Formats.Asn1;
 using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Web;
 using Template.HelpingClasses;
 using Template.Models;
 using Template.Repositories;
@@ -28,12 +32,13 @@ namespace Template.Controllers
         private readonly IMenuProductRepo _menuProductRepo;
         private readonly IMenuPreperationRepo _menuPreperationRepo;
         private readonly IMenuCategoryRepo _menuCategoryRepo;
+        private readonly IMenuTypeRepo _menuTypeRepo;
         private readonly GeneralPurpose gp;
 
         public MenuController(IUserRepo userRepo, IIngredientRepo ingredientRepo, IMenuRepo menuRepo,
             IMenuIngredientRepo menuIngredientRepo, IMenuProductRepo menuProductRepo,
             IMenuPreperationRepo menuPreperationRepo, IHttpContextAccessor haccess, IProductRepo productRepo,
-            IPreperationRepo preperationRepo, IMenuCategoryRepo menuCategoryRepo)
+            IPreperationRepo preperationRepo, IMenuCategoryRepo menuCategoryRepo,IMenuTypeRepo menuTypeRepo)
         {
             _userRepo = userRepo;
             _ingredientRepo = ingredientRepo;
@@ -45,21 +50,58 @@ namespace Template.Controllers
             _productRepo = productRepo;
             _preparationRepo = preperationRepo;
             _menuCategoryRepo = menuCategoryRepo;
+            _menuTypeRepo = menuTypeRepo;
 
         }
 
-        public IActionResult Index(string msg = "", string color = "")
+        public IActionResult Index(string msg = "", string color = "", string MenuTypeId="")
         {
             ViewBag.message = msg;
             ViewBag.color = color;
+            ViewBag.MenuTypeId = MenuTypeId;
             return View();
         }
 
 
         [HttpPost]
-        public async Task<IActionResult> GetList(string Name = "", string StartDate = "",
+        public async Task<IActionResult> GetMenuDropdownList(string MenuTypeId = "")
+        {
+            UserDto? getUserId = gp.GetUserClaims();
+            List<Menu> list;
+
+            if (getUserId.Role == 1)
+            {
+                list = (List<Menu>)await _menuRepo.GetActiveMenuList();
+            }
+            else
+            {
+                list = (List<Menu>)await _menuRepo.GetActiveMenuList(Convert.ToInt32(getUserId.Id));
+            }
+            var uniqueMenuNames = list.Select(menu => menu.Name).Distinct();
+            var uniqueMenus = list.Where(menu => uniqueMenuNames.Contains(menu.Name))
+                                  .GroupBy(menu => menu.Name).Select(group => group.First());
+
+            if (!string.IsNullOrEmpty(MenuTypeId))
+            {
+                int menuId = StringCipher.DecryptId(MenuTypeId);
+                uniqueMenus = uniqueMenus.Where(x => x.MenuTypeId == menuId).ToList();
+            }
+            List<MenuDto> listDto = uniqueMenus.Select(menu => new MenuDto
+            {
+                Id = menu.Id.ToString(),
+                EncId = StringCipher.EncryptId(menu.Id),
+                Name = menu.Name,
+                Notes = menu.Notes,
+            }).ToList();
+
+            return Json(listDto);
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> GetList(string Name = "", string Notes = "", string StartDate = "",
             string EndDate = "", string Cooking = "",
-            string Weight = "", string? CategoriesId = "")
+            string Weight = "", string? CategoriesId = "", string MenuTypeId = "")
         {
             var getUserId = gp.GetUserClaims();
             var list = new List<Menu>();
@@ -97,10 +139,19 @@ namespace Template.Controllers
             {
                 list = list.Where(x => x.Weight.ToLower().Contains(Weight.Trim().ToLower())).ToList();
             }
+            if (!String.IsNullOrEmpty(Notes))
+            {
+                list = list.Where(x => x.Notes.ToLower().Contains(Notes.Trim().ToLower())).ToList();
+            }
 
             if (!String.IsNullOrEmpty(CategoriesId))
             {
                 list = list.Where(x => x.CategoryId == Convert.ToInt32(CategoriesId)).ToList();
+            }
+            if (!String.IsNullOrEmpty(MenuTypeId))
+            {
+                int menuId = StringCipher.DecryptId(MenuTypeId);
+                list = list.Where(x => x.MenuTypeId == menuId).ToList();
             }
 
             int start = Convert.ToInt32(Request.Form["start"].FirstOrDefault());
@@ -204,6 +255,7 @@ namespace Template.Controllers
                     Id = u.Id.ToString(),
                     EncId = StringCipher.EncryptId(u.Id),
                     Name = u.Name,
+                    Notes = u.Notes,
                     Date = u.Date != null ? u.Date.Value.ToString("MM/dd/yyyy") : null,
                     Photo = u.Photo,
                     Cooking = u.Cooking,
@@ -224,6 +276,7 @@ namespace Template.Controllers
             return Json(new { data = udto, draw = Request.Form["draw"].FirstOrDefault(), recordsTotal = totalrows, recordsFiltered = totalrowsafterfilterinig });
         }
 
+       
         public IActionResult AddMenu(string msg = "", string color = "")
         {
             var getUserId = gp.GetUserClaims();
@@ -243,9 +296,11 @@ namespace Template.Controllers
             List<string> ingredientsMenu = menu.Ingredients?.ToList();
             List<string> productsMenu = menu.Products?.ToList();
             List<string> preperationsMenu = menu.Preperations?.ToList();
+          
             Menu menu1 = new Menu()
             {
                 Name = menu.Name.ToString(),
+                Notes = menu.Notes.ToString(),
                 Date = Convert.ToDateTime(menu.Date),
                 Cooking = menu.Cooking,
                 Weight = menu.Weight,
@@ -254,7 +309,9 @@ namespace Template.Controllers
                 IsActive = 1,
                 CreatedBy = Convert.ToInt32(getUserId.Id),
                 CreatedAt = GeneralPurpose.DateTimeNow(),
-                CategoryId = StringCipher.DecryptId(menu.CategoryId)
+                CategoryId = StringCipher.DecryptId(menu.CategoryId),
+                MenuTypeId = StringCipher.DecryptId(menu.MenuTypeId)
+
             };
 
             if (menu.Picture != null)
@@ -377,11 +434,13 @@ namespace Template.Controllers
                 return RedirectToAction("Index", new { msg = "Something Went Wrong", color = "red" });
             }
             getMenu.Name = menu.Name;
+            getMenu.Notes = menu.Notes;
             getMenu.Date = Convert.ToDateTime(menu.Date);
             getMenu.Link = menu.Link;
             getMenu.PreperationForBeaorStaff = menu.PreperationForBeaorStaff;
             getMenu.Cooking = menu.Cooking;
             getMenu.Weight = menu.Weight;
+            getMenu.MenuTypeId = StringCipher.DecryptId(menu.MenuTypeId);
             getMenu.CategoryId = StringCipher.DecryptId(menu.CategoryId);
 
             if (menu.Picture != null)
@@ -427,6 +486,7 @@ namespace Template.Controllers
                 Id = menu.Id.ToString(),
                 EncId = StringCipher.EncryptId(menu.Id),
                 Name = menu.Name,
+                Notes = menu.Notes,
                 Date = menu.Date.ToString(),
                 Cooking = menu.Cooking,
                 Weight = menu.Weight,
@@ -451,15 +511,14 @@ namespace Template.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> GenerateCSV(string Name = "", string StartDate = "",
-            string EndDate = "", string Cooking = "",
-            string Weight = "", string? CategoriesId = "")
+        public async Task<IActionResult> GenerateCSV(string Name = "", string MenuTypeId = null, string StartDate = "", string EndDate = "", string Cooking = "", string Weight = "", string? CategoriesId = "",
+                bool nameCheckbox = true, bool dateCheckbox = true, bool categoryCheckbox = true, bool weightCheckbox = true,bool notesCheckbox=true, bool cookingCheckbox = true,bool photoCheckbox = true, bool linkCheckbox = true, bool productsCheckbox = true, bool ingredientsCheckbox = true,bool preperationCheckbox = true,bool categoryPhotoCheckbox = true,bool beaCheckbox = true, int? selectedMenuId = null)
         {
             var baseUrl = $"{Request.Scheme}://{Request.Host}/";
             var getUserId = gp.GetUserClaims();
             var list = new List<Menu>();
 
-            if (getUserId.Role == 1)
+            if (getUserId.Role == 1  )
             {
                 list = (List<Menu>)await _menuRepo.GetActiveMenuList();
             }
@@ -467,12 +526,21 @@ namespace Template.Controllers
             {
                 list = (List<Menu>)await _menuRepo.GetActiveMenuList(Convert.ToInt32(getUserId.Id));
             }
+            if (selectedMenuId.HasValue)
+            {
+                list = list.Where(x => x.Id == selectedMenuId.Value).ToList();
+            }
 
             if (!String.IsNullOrEmpty(Name))
             {
                 list = list.Where(x => x.Name.ToLower().Contains(Name.Trim().ToLower())).ToList();
             }
 
+            if (!String.IsNullOrEmpty(MenuTypeId))
+            {
+                int menuId = StringCipher.DecryptId(MenuTypeId);
+                list = list.Where(x => x.MenuTypeId == menuId).ToList();
+            }
             if (!String.IsNullOrEmpty(StartDate))
             {
                 list = list.Where(x => Convert.ToDateTime(x.Date).Date >= Convert.ToDateTime(StartDate).Date).ToList();
@@ -496,19 +564,19 @@ namespace Template.Controllers
             {
                 list = list.Where(x => x.CategoryId == Convert.ToInt32(CategoriesId)).ToList();
             }
-
+           
             List<MenuDto> udto = new List<MenuDto>();
 
             foreach (Menu u in list)
             {
                 var categoryName = "";
                 var categoryPhoto = "";
-                var ingredients = await _menuIngredientRepo.GetActiveMenuIngredientListByMenuId(u.Id);
-                var products = await _menuProductRepo.GetActiveMenuProductListByMenuId(u.Id);
-                var preparations = await _menuPreperationRepo.GetActiveMenuPreperationListByMenuId(u.Id);
+                IEnumerable<MenuIngredient>? ingredients = await _menuIngredientRepo.GetActiveMenuIngredientListByMenuId(u.Id);
+                IEnumerable<MenuProduct>? products = await _menuProductRepo.GetActiveMenuProductListByMenuId(u.Id);
+                IEnumerable<MenuPreperation>? preparations = await _menuPreperationRepo.GetActiveMenuPreperationListByMenuId(u.Id);
                 if (u.CategoryId != null)
                 {
-                    var category = await _menuCategoryRepo.GetMenuCategoryById((int)u.CategoryId);
+                    MenuCategory? category = await _menuCategoryRepo.GetMenuCategoryById((int)u.CategoryId);
                     categoryName = category.Name;
                     categoryPhoto = category.FilePath;
                 }
@@ -518,7 +586,7 @@ namespace Template.Controllers
                 List<string> preparationsArray = new List<string>();
 
 
-                foreach (var ingredient in ingredients)
+                foreach (MenuIngredient ingredient in ingredients)
                 {
                     var aaa = await _ingredientRepo.GetIngredientById((int)ingredient.IngredientId);
                     ingredientsArray.Add(aaa?.Name ?? string.Empty);
@@ -552,26 +620,29 @@ namespace Template.Controllers
                     Id = u.Id.ToString(),
                     EncId = StringCipher.EncryptId(u.Id),
                     Name = u.Name,
+                    Notes = u.Notes,
                     Date = u.Date != null ? u.Date.Value.ToString("dd-MMM") : null,
-                    Photo = string.IsNullOrEmpty(u.Photo) ? "" : baseUrl + u.Photo,
-                    Cooking = u.Cooking,
+                    CategoryName = categoryName,
                     Weight = u.Weight,
+                    Cooking = u.Cooking,
+                    Photo = string.IsNullOrEmpty(u.Photo) ? "" : baseUrl + u.Photo,
                     Link = u.Link,
-                    Ingredients = string.Join(", ", ingredientsArray),
                     Products = string.Join(", ", productsArray),
+                    Ingredients = string.Join(", ", ingredientsArray),
                     Preperations = string.Join(", ", preparationsArray),
                     PreperationForBeaorStaff = u.PreperationForBeaorStaff,
-                    CreatedBy = userName,
-                    CategoryName = categoryName,
                     CategoryPhoto = categoryPhoto,
+                    CreatedBy = userName,
                     CategoryId = u.CategoryId != null ? u.CategoryId.ToString() : "",
                 };
                 udto.Add(obj);
             }
+
             try
             {
-                var csv = await ExportUser(udto);
-                return File(csv.ToArray(), "text/csv", "Heather Stock - Menu.csv");
+                var csv = await ExportUser(udto, nameCheckbox, dateCheckbox, categoryCheckbox,  weightCheckbox,notesCheckbox, cookingCheckbox,
+                    photoCheckbox, linkCheckbox, productsCheckbox, ingredientsCheckbox, preperationCheckbox, categoryPhotoCheckbox, beaCheckbox);
+                return File(csv.ToArray(), "text/csv", "Heather Stock - FALL_WINTER.csv");
             }
             catch (Exception ex)
             {
@@ -580,25 +651,72 @@ namespace Template.Controllers
             }
         }
 
-        public async Task<MemoryStream> ExportUser(List<MenuDto> udto)
+        public async Task<MemoryStream> ExportUser(List<MenuDto> udto,bool nameCheckbox, bool dateCheckbox, bool categoryCheckbox,bool weightCheckbox,bool notesCheckbox, bool cookingCheckbox,bool photoCheckbox,bool linkCheckbox,bool productsCheckbox,bool ingredientsCheckbox,bool preperationCheckbox,bool categoryPhotoCheckbox,bool beaCheckbox)
         {
+           
             var stream = new MemoryStream();
             var writer = new StreamWriter(stream, Encoding.UTF8);
             var csv = new CsvWriter(writer, new CsvConfiguration(CultureInfo.InvariantCulture));
-            csv.WriteField(" ");
-            csv.WriteField("DATES");
-            csv.WriteField("PHOTO");
-            csv.WriteField("LINK");
-            csv.WriteField("PRERATION FOR LETICIA");
-            csv.WriteField("PREPERATION FOR BEA OR STAFF");
-            csv.WriteField("INGREDIENTS NEEDED");
-            csv.WriteField("PRODUCED THAT NEED TO BE PREPPED");
-            csv.WriteField("COOKING");
-            csv.WriteField("WEIGHT");
+           
+            if (categoryCheckbox)
+            {
+                csv.WriteField(field: "CATEGORY");
+            }
+            if (nameCheckbox)
+            {
+                csv.WriteField(field: "ITEM ");
+            }
+            if (dateCheckbox)
+            {
+                csv.WriteField("DATES");
+            }
+
+            if (categoryPhotoCheckbox)
+            {
+                csv.WriteField("CATEGORY PHOTO");
+            }
+            if (linkCheckbox)
+            {
+                csv.WriteField("LINK");
+            }
+            if (photoCheckbox)
+            {
+                csv.WriteField("PHOTO");
+            }
+            if (weightCheckbox)
+            {
+                csv.WriteField("WEIGHT");
+            }
+            if (notesCheckbox)
+            {
+                csv.WriteField("NOTES");
+            }
+            if (cookingCheckbox)
+            {
+                csv.WriteField("COOKING");
+            }
+           
+            if(productsCheckbox)
+            {
+                csv.WriteField("PRODUCTS");
+            }
+            if (ingredientsCheckbox)
+            {
+                csv.WriteField("INGREDIENTS NEEDED");
+            }
+            if (preperationCheckbox)
+            {
+                csv.WriteField("PREPERATION");
+            }
+            if (beaCheckbox)
+            {
+                csv.WriteField("PRERATION FOR Bea Or Staff");
+            }
+           
             csv.NextRecord();
 
             // Group items by CategoryId
-            var groupedByCategory = udto.GroupBy(item => item.CategoryId);
+            var groupedByCategory = udto.GroupBy(item => item.CategoryId).ToList();
 
             foreach (var group in groupedByCategory)
             {
@@ -606,23 +724,65 @@ namespace Template.Controllers
                 foreach (var i in group)
                 {
                     // Write category name only once for each category group
-                    if (!isCategoryNameWritten)
+
+                    if (categoryCheckbox)
                     {
-                        csv.WriteField(i.CategoryName);
-                        csv.NextRecord();
-                        isCategoryNameWritten = true;
+                        if (!isCategoryNameWritten)
+                        {
+                            csv.WriteField(i.CategoryName);
+                            //csv.NextRecord();
+                            isCategoryNameWritten = true;
+                        }
+                    }
+                    if (nameCheckbox)
+                    {
+                        csv.WriteField(i.Name);
+                    }
+                    if (dateCheckbox)
+                    {
+                        csv.WriteField(i.Date);
+                    }
+                    if (categoryPhotoCheckbox)
+                    {
+                        csv.WriteField(i.CategoryPhoto);
+                    }
+                    if (linkCheckbox)
+                    {
+                        csv.WriteField(i.Link);
+                    }
+                    if (photoCheckbox)
+                    {
+                        csv.WriteField(i.Photo);
+                    }
+                    if (weightCheckbox)
+                    {
+                        csv.WriteField(i.Weight);
+                    }
+                    if (notesCheckbox)
+                    {
+                        csv.WriteField(i.Notes);
+                    }
+                    if (cookingCheckbox)
+                    {
+                        csv.WriteField(i.Cooking);
+                    }
+                    if (productsCheckbox)
+                    {
+                        csv.WriteField(i.Products);
+                    }
+                    if (ingredientsCheckbox)
+                    {
+                        csv.WriteField(i.Ingredients);
+                    }
+                    if (preperationCheckbox)
+                    {
+                        csv.WriteField(i.Preperations);
+                    }
+                    if (beaCheckbox)
+                    {
+                        csv.WriteField(i.PreperationForBeaorStaff);
                     }
 
-                    csv.WriteField(i.Name);
-                    csv.WriteField(i.Date);
-                    csv.WriteField(i.Photo);
-                    csv.WriteField(i.Link);
-                    csv.WriteField(i.Preperations);
-                    csv.WriteField(i.PreperationForBeaorStaff);
-                    csv.WriteField(i.Ingredients);
-                    csv.WriteField(i.Products);
-                    csv.WriteField(i.Cooking);
-                    csv.WriteField(i.Weight);
                     csv.NextRecord();
                 }
                 csv.NextRecord();
@@ -634,6 +794,306 @@ namespace Template.Controllers
             return stream;
         }
 
+        [HttpPost]
+        public async Task<IActionResult> GenerateCSVAMP(string Name = "", string MenuTypeId = null, bool descriptionCheckbox = true, bool quantityCheckbox = true, bool nameCheckbox = true,bool preperationCheckbox = true, int? selectedMenuId = null)
+        {
+            var baseUrl = $"{Request.Scheme}://{Request.Host}/";
+            var getUserId = gp.GetUserClaims();
+            var list = new List<Menu>();
+
+            if (getUserId.Role == 1)
+            {
+                list = (List<Menu>)await _menuRepo.GetActiveMenuList();
+            }
+            else
+            {
+                list = (List<Menu>)await _menuRepo.GetActiveMenuList(Convert.ToInt32(getUserId.Id));
+            }
+            if (selectedMenuId.HasValue)
+            {
+                list = list.Where(x => x.Id == selectedMenuId.Value).ToList();
+            }
+
+            if (!String.IsNullOrEmpty(Name))
+            {
+                list = list.Where(x => x.Name.ToLower().Contains(Name.Trim().ToLower())).ToList();
+            }
+            if (!String.IsNullOrEmpty(MenuTypeId))
+            {
+                int menuId = StringCipher.DecryptId(MenuTypeId);
+                list = list.Where(x => x.MenuTypeId == menuId).ToList();
+            }
+
+            List<MenuDto> udto = new List<MenuDto>();
+
+            foreach (Menu u in list)
+            {
+                IEnumerable<MenuPreperation>? preparations = await _menuPreperationRepo.GetActiveMenuPreperationListByMenuId(u.Id);
+              
+                List<string> preparationsArray = new List<string>();
+
+                foreach (var preparation in preparations)
+                {
+                    var aaa = await _preparationRepo.GetPreperationById((int)preparation.PreperationId);
+                    preparationsArray.Add(aaa?.Name ?? string.Empty);
+                }
+
+                var userName = "";
+                var createdby = await _userRepo.GetUserById((int)u.CreatedBy);
+                if (Convert.ToInt32(getUserId.Id) == u.CreatedBy)
+                {
+                    userName = "You";
+                }
+                else
+                {
+                    userName = createdby.Name;
+                }
+
+                MenuDto obj = new MenuDto()
+                {
+                    Id = u.Id.ToString(),
+                    EncId = StringCipher.EncryptId(u.Id),
+                    Name = u.Name,
+                    Qunantity = null,
+                    Notes =u.Notes,
+                    Preperations = string.Join(", ", preparationsArray),
+                    CreatedBy = userName,
+                };
+                udto.Add(obj);
+            }
+
+            try
+            {
+                var csv = await ExportUserAMP(udto, nameCheckbox, descriptionCheckbox, quantityCheckbox,
+                      preperationCheckbox);
+                return File(csv.ToArray(), "text/csv", "Heather Stock - AMP_Menu.csv");
+            }
+            catch (Exception ex)
+            {
+                var exx = ex.Message.ToString();
+                return null;
+            }
+        }
+
+        public async Task<MemoryStream> ExportUserAMP(List<MenuDto> udto, bool nameCheckbox,bool quantityCheckbox,bool preperationCheckbox, bool notesCheckbox)
+        {
+            var stream = new MemoryStream();
+            var writer = new StreamWriter(stream, Encoding.UTF8);
+            var csv = new CsvWriter(writer, new CsvConfiguration(CultureInfo.InvariantCulture));
+            
+            if (nameCheckbox)
+            {
+                csv.WriteField(field: "ITEM");
+            }
+            if (preperationCheckbox)
+            {
+                csv.WriteField("PREPERATION");
+            }
+            if (quantityCheckbox)
+            {
+                csv.WriteField("QUANTITY");
+            }
+            if (notesCheckbox)
+            {
+                csv.WriteField("NOTES");
+            }
+
+            csv.NextRecord();
+
+            var groupedByCategory = udto.GroupBy(item => item.CategoryId).ToList();
+
+            foreach (var group in groupedByCategory)
+            {
+                bool isCategoryNameWritten = false;
+                foreach (var i in group)
+                {
+                    
+                    if (nameCheckbox)
+                    {
+                        csv.WriteField(i.Name);
+                    }
+                   
+                    if (preperationCheckbox)
+                    {
+                        csv.WriteField(i.Preperations);
+                    }
+                  
+                    if (quantityCheckbox)
+                    {
+                        csv.WriteField(i.Qunantity);
+                    }
+                    if (notesCheckbox)
+                    {
+                        csv.WriteField(i.Notes);
+                    }
+                    csv.NextRecord();
+                }
+                csv.NextRecord();
+                csv.NextRecord();
+            }
+
+            writer.Flush();
+            stream.Position = 0;
+            return stream;
+        }
+        [HttpPost]
+        public async Task<IActionResult> GenerateCSVLETICIA(string MenuTypeId = null, bool nameCheckbox = true, bool dateCheckbox = true,  bool descriptionCheckbox = true,bool preperationCheckbox = true,  int? selectedMenuId = null)
+        {
+            var baseUrl = $"{Request.Scheme}://{Request.Host}/";
+            var getUserId = gp.GetUserClaims();
+            List<Menu>? list = new List<Menu>();
+
+            if (getUserId.Role == 1)
+            {
+                list = (List<Menu>)await _menuRepo.GetActiveMenuList();
+            }
+            else
+            {
+                list = (List<Menu>)await _menuRepo.GetActiveMenuList(Convert.ToInt32(getUserId.Id));
+            }
+            if (selectedMenuId.HasValue)
+            {
+                list = list.Where(x => x.Id == selectedMenuId.Value).ToList();
+            }
+            if (!String.IsNullOrEmpty(MenuTypeId))
+            {
+                int menuId = StringCipher.DecryptId(MenuTypeId);
+                list = list.Where(x => x.MenuTypeId == menuId).ToList();
+            }
+
+            List<MenuDto> udto = new List<MenuDto>();
+
+            foreach (Menu u in list)
+            {
+                IEnumerable<MenuPreperation>? preparations = await _menuPreperationRepo.GetActiveMenuPreperationListByMenuId(u.Id);
+                List<string> preparationsArray = new List<string>();
+                foreach (var preparation in preparations)
+                {
+                    var aaa = await _preparationRepo.GetPreperationById((int)preparation.PreperationId);
+                    preparationsArray.Add(aaa?.Name ?? string.Empty);
+                }
+
+                var userName = "";
+                var createdby = await _userRepo.GetUserById((int)u.CreatedBy);
+                if (Convert.ToInt32(getUserId.Id) == u.CreatedBy)
+                {
+                    userName = "You";
+                }
+                else
+                {
+                    userName = createdby.Name;
+                }
+
+                MenuDto obj = new MenuDto()
+                {
+                    Id = u.Id.ToString(),
+                    EncId = StringCipher.EncryptId(u.Id),
+                    Name = u.Name,
+                    Date = u.Date != null ? $" ({u.Date.Value.ToString("dddd")})" : null,
+                    Preperations = string.Join(", ", preparationsArray),
+                    Notes =u.Notes,
+                    CreatedBy = userName,
+                };
+                    udto.Add(obj);
+            }
+
+            try
+            {
+                var csv = await ExportUserCSVLETICIA(udto, nameCheckbox, dateCheckbox, 
+                    preperationCheckbox,descriptionCheckbox);
+                return File(csv.ToArray(), "text/csv", "Heather Stock - Menu.csv");
+            }
+            catch (Exception ex)
+            {
+                var exx = ex.Message.ToString();
+                return null;
+            }
+        }
+
+        public async Task<MemoryStream> ExportUserCSVLETICIA(List<MenuDto> udto, bool nameCheckbox, bool dateCheckbox,bool preperationCheckbox,bool notesCheckbox)
+        {
+            var stream = new MemoryStream();
+            var writer = new StreamWriter(stream, Encoding.UTF8);
+            var csv = new CsvWriter(writer, new CsvConfiguration(CultureInfo.InvariantCulture));
+            var getDay = udto.GroupBy(item => item.Date);
+
+            if (dateCheckbox)
+            {
+                csv.WriteField("");
+            }
+
+            if (preperationCheckbox)
+            {
+                csv.WriteField("Seasoning/Condimento");
+            }
+            if(notesCheckbox)
+            {
+                csv.WriteField("Método/ Spanish");
+            }
+            if (notesCheckbox)
+            {
+                csv.WriteField("Amount/Monto");
+            }
+            if (notesCheckbox)
+            {
+                csv.WriteField("NOTES");
+            }
+            if (notesCheckbox)
+            {
+                csv.WriteField("Method/ English");
+            }
+            csv.NextRecord();
+            IEnumerable<IGrouping<string?, MenuDto>>? groupedByDate = udto.GroupBy(item => item.Date);
+
+            foreach (IGrouping<string, MenuDto> group in groupedByDate)
+            {
+                bool getDayWriiten = false;
+
+                foreach (var i in group)
+                {
+
+                    if (!getDayWriiten)
+                    {
+                        string cleanedDate = System.Text.RegularExpressions.Regex.Replace($"{i.Date:dddd}", "[()]", "").Trim();
+                        csv.WriteField(cleanedDate);
+                        csv.NextRecord();
+                      
+                        getDayWriiten = true;
+                    }
+                  
+                    if (dateCheckbox)
+                    {
+                        csv.WriteField($"{i.Name}");
+                    }
+                    if (preperationCheckbox)
+                    {
+                        csv.WriteField(i.Preperations);
+                    }
+                    if (notesCheckbox)
+                    {
+                        csv.WriteField("");
+                    }
+                    if (notesCheckbox)
+                    {
+                        csv.WriteField("");
+                    }
+                    if (notesCheckbox)
+                    {
+                        csv.WriteField(i.Notes);
+                    }
+                    if (notesCheckbox)
+                    {
+                        csv.WriteField("");
+                    }
+                    csv.NextRecord();
+                }
+                csv.NextRecord();
+                csv.NextRecord();
+            }
+            writer.Flush();
+            stream.Position = 0;
+            return stream;
+        }
 
         private async Task<bool> UpdateIngredients(string[] ingredientsId, int menuId)
         {

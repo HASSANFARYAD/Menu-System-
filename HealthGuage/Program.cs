@@ -23,6 +23,7 @@ builder.Services.AddScoped<IIngredientRepo, IngredientRepo>();
 builder.Services.AddScoped<IProductRepo, ProductRepo>();
 builder.Services.AddScoped<IPreperationRepo, PreperationRepo>();
 builder.Services.AddScoped<IMenuRepo, MenuRepo>();
+builder.Services.AddScoped<IMenuTypeRepo, MenuTypeRepo>();
 builder.Services.AddScoped<IMenuIngredientRepo, MenuIngredientRepo>();
 builder.Services.AddScoped<IMenuProductRepo, MenuProductRepo>();
 builder.Services.AddScoped<IMenuPreperationRepo, MenuPreperationRepo>();

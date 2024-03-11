@@ -108,6 +108,7 @@ namespace Template.Controllers
 				{
 					Id = StringCipher.EncryptId(u.Id),
 					Name = u.Name,
+					Notes= u.Notes,
 					CreatedBy =  userName,
 				};
 
@@ -128,6 +129,7 @@ namespace Template.Controllers
             Ingredient ingredient = new Ingredient {
 				Name = _ingredient.Name.Trim(),
 				IsActive = 1,
+				Notes = _ingredient.Notes,
 				CreatedAt = GeneralPurpose.DateTimeNow(),
 				CreatedBy = Convert.ToInt32(getUserId.Id)
             };
@@ -148,6 +150,7 @@ namespace Template.Controllers
                 return RedirectToAction("Index", new { msg = "Record not found", color = "red" });
             }
             ingredient.Name = _ingredient.Name.Trim();
+			ingredient.Notes = _ingredient.Notes.Trim();
             ingredient.UpdatedAt = GeneralPurpose.DateTimeNow();
 
             if (await _ingredientRepo.UpdateIngredient(ingredient))
@@ -171,6 +174,7 @@ namespace Template.Controllers
 			{
 				Id = u.Id.ToString(),
 				Name = u.Name,
+				Notes= u.Notes,
 			};
 
 			return Json(obj);
@@ -200,6 +204,7 @@ namespace Template.Controllers
                     Id = u.Id.ToString(),
                     EncId = StringCipher.EncryptId(u.Id),
                     Name = u.Name,
+					Notes = u.Notes,
                 };
 
                 udto.Add(obj);

@@ -12,5 +12,6 @@ namespace HealthGuage.Models
         [ForeignKey("Preperation")]
         public int? PreperationId { get; set; }
         public Preperation? Preperation { get; set; }
+        public string? Notes { get; set; }
     }
 }

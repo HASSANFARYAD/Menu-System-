@@ -25,9 +25,21 @@
                             </div>
 
                             <div class="form-group">
+                                <label class="text-bold">Notes <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control bg-lightgrey" id="menuNotes" required name="Notes" placeholder="">
+                            </div>
+
+                            <div class="form-group">
                                 <label class="text-bold">Category <span class="text-danger">*</span><i class="icon-spinner" id="categoriesLoader" style="display:none"></i></label>
                                 <div class="multi-select-full bg-lightgrey border-bottom-grey">
                                     <select class="select" id="categoriesDropdown" name="CategoryId" required>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="text-bold">MenuType <span class="text-danger">*</span><i class="icon-spinner" id="menuTypeLoader" style="display:none"></i></label>
+                                <div class="multi-select-full bg-lightgrey border-bottom-grey">
+                                    <select class="select" id="menuTypeDropdown" name="MenuTypeId" required>
                                     </select>
                                 </div>
                             </div>
@@ -111,6 +123,7 @@
         getCategoriesList();
         function getCategoriesList() {
             $("#categoriesLoader").css("display", "inline-block");
+            $("#menuTypeLoader").css("display", "inline-block");
             $("#ingredientsLoader").css("display", "inline-block");
             $("#productsLoader").css("display", "inline-block");
             $("#preperationsLoader").css("display", "inline-block");
@@ -179,6 +192,30 @@
                 },
                 complete: function () {
                     $("#productsLoader").css("display", "none");
+                    getMenuTypeList();
+                }
+            });
+        }
+
+        function getMenuTypeList() {
+            $.ajax({
+                type: 'POST',
+                url: "../MenuType/GetMenuTypeList",
+                dataType: "json",
+                success: function (response) {
+                    console.log("MenuType", response);
+                    var appendDropdown = "";
+                    for (var item = 0; item < response.length; item++) {
+                        appendDropdown += '<option value="' + response[item].encId + '">' + response[item].name + '</option>';
+
+                    }
+                    $("#menuTypeDropdown").append(appendDropdown);
+                },
+                error: function (error) {
+                    console.log("MenuType", error);
+                },
+                complete: function () {
+                    $("#menuTypeLoader").css("display", "none");
                     getPreperationList();
                 }
             });
@@ -207,5 +244,6 @@
                 }
             });
         }
+        
     </script>
 }

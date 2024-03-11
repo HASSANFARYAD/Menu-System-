@@ -39,5 +39,6 @@ namespace HealthGuage.Models
         public DbSet<MenuPreperation> MenuPreperation { get; set; }
         public DbSet<MenuProduct> MenuProduct { get; set; }
         public DbSet<MenuCategory> MenuCategory { get; set; }
+        public DbSet<MenuType> MenuType { get; set; }
     }
 }

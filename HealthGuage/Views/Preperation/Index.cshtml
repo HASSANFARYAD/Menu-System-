@@ -27,6 +27,10 @@
                         <label class="text-bold">Name <span class="text-danger">*</span></label>
                         <input type="text" class="form-control" onkeyup="validateName(this.value)" name="Name" placeholder="Please Enter Full Name" required>
                     </div>
+                    <div class="form-group">
+                        <label class="text-bold">Notes <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" name="Notes" placeholder="Please Enter Full Notes" required>
+                    </div>
                     <span class="text-danger" id="addNamePreperation"></span>
                     <div class="modal-footer">
                         <button type="submit" value="submit" class="btn btn-primary" id="addSubBtn">Add</button>
@@ -56,6 +60,10 @@
                     <div class="form-group">
                         <label class="text-bold">Name <span class="text-danger">*</span></label>
                         <input type="text" class="form-control" name="Name" id="updName" onkeyup="validateName(this.value)" placeholder="Please Enter Full Name" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="text-bold">Notes <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" name="Notes" id="updNotes" placeholder="Please Enter Full Notes" required>
                     </div>
 
                     <span class="text-danger" id="updNamePreperation"></span>
@@ -92,6 +100,9 @@
                         Name
                     </th>
                     <th class="text-bold text-center">
+                        Notes
+                    </th>
+                    <th class="text-bold text-center">
                         Created By
                     </th>
                     <th class="text-bold text-center">
@@ -125,6 +136,7 @@
                     [
                         { "data": "hidden", "name": "0" },
                         { "data": "Name", "name": "Name" },
+                        { "data": "Notes", "notes": "Notes" },
                         { "data": "createdBy", "name": "CreatedBy" },
                     ],
                 'columnDefs':
@@ -148,11 +160,18 @@
                             "targets": 2,
                             'className': '',
                             "render": function (data, type, full, meta) {
-                                return full.createdBy;
+                                return full.notes;
                             }
                         },
                         {
                             "targets": 3,
+                            'className': '',
+                            "render": function (data, type, full, meta) {
+                                return full.createdBy;
+                            }
+                        },
+                        {
+                            "targets": 4,
                             'className': '',
                             'sortable': false,
                             "render": function (data, type, full, meta) {
@@ -205,6 +224,7 @@
 
     function updateFunction(id) {
         $('#updNamePreperation').text("");
+        $('#updNotesPreperation').text("");
         $('#updSubBtn').attr('disabled', false);
         $("#loadImg").show();
 
@@ -221,6 +241,7 @@
                 }
                 $("#updId").val(response.id);
                 $("#updName").val(response.name);
+                $("#updNotes").val(response.notes);
                 $("#loadImg").hide();
                 $("#updateModal").modal('show');
             },

@@ -6,6 +6,6 @@ namespace HealthGuage.Models
     {
         public string? Name { get; set; }
         public List<MenuProduct?> MenuProducts { get; set; }
-
+        public string? Notes { get; set; }
     }
 }

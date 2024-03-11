@@ -30,6 +30,9 @@ namespace Template.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<int?>("CategoryId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Cooking")
                         .HasColumnType("nvarchar(max)");
 
@@ -51,7 +54,13 @@ namespace Template.Migrations
                     b.Property<string>("Link")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("MenuTypeId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Notes")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Photo")
@@ -97,6 +106,9 @@ namespace Template.Migrations
                     b.Property<int?>("MenuId")
                         .HasColumnType("int");
 
+                    b.Property<string>("Notes")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
@@ -131,6 +143,9 @@ namespace Template.Migrations
 
                     b.Property<int?>("MenuId")
                         .HasColumnType("int");
+
+                    b.Property<string>("Notes")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("PreperationId")
                         .HasColumnType("int");
@@ -170,6 +185,9 @@ namespace Template.Migrations
                     b.Property<int?>("MenuId")
                         .HasColumnType("int");
 
+                    b.Property<string>("Notes")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int?>("ProductId")
                         .HasColumnType("int");
 
@@ -208,6 +226,9 @@ namespace Template.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Notes")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
@@ -237,6 +258,9 @@ namespace Template.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Notes")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("UpdatedAt")
@@ -296,11 +320,11 @@ namespace Template.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2023, 12, 20, 4, 0, 32, 217, DateTimeKind.Local).AddTicks(7973),
+                            CreatedAt = new DateTime(2024, 2, 20, 18, 16, 34, 476, DateTimeKind.Local).AddTicks(3502),
                             Email = "uzair.aslam02@gmail.com",
                             IsActive = 1,
                             Name = "Uzair Aslam",
-                            Password = "m/EdHyrUpJ0zwDm3oFZoblpeX9ye1+39BYknM3Wd8Cw=",
+                            Password = "F7oOAzEaPkpnNMpa8vW5DngVpHlJqJ985bTfEDTCXLs=",
                             PhoneNumber = "0000-0000000",
                             Role = 1
                         });
@@ -387,6 +411,9 @@ namespace Template.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Notes")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
@@ -421,12 +448,49 @@ namespace Template.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Notes")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
                     b.ToTable("MenuCategory");
+                });
+
+            modelBuilder.Entity("Template.Models.MenuType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("CreatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("IsActive")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("MenuType");
                 });
 
             modelBuilder.Entity("HealthGuage.Models.MenuIngredient", b =>
